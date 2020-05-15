@@ -1,24 +1,21 @@
 # english-assist
 
-## Project setup
+## 安装依赖(采用yarn  不使用npm)
 ```
 yarn install
 ```
 
-### Compiles and hot-reloads for development
+### 运行
 ```
 yarn serve
 ```
 
-### Compiles and minifies for production
+### 打包
 ```
 yarn build
 ```
 
-### Lints and fixes files
+### 检查语法
 ```
 yarn lint
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
