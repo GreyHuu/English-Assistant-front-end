@@ -1,4 +1,4 @@
 import Vue from 'vue'
-import { Button } from 'element-ui'
-
-Vue.use(Button)
+import Element from 'element-ui'
+import './element-theme/theme/index.css'
+Vue.use(Element)
