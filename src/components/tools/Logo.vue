@@ -1,7 +1,8 @@
 <template>
   <div class="logo">
     <router-link :to="{name:'dashboard'}">
-      <LogoSvg alt="logo" />
+<!--      <LogoSvg alt="logo" />-->
+      <img src="../../../public/english-input.png" height="32" width="32" alt="logo"/>
       <h1 v-if="showTitle">{{ title }}</h1>
     </router-link>
   </div>
@@ -18,7 +19,7 @@ export default {
   props: {
     title: {
       type: String,
-      default: 'Ant Design Pro',
+      default: 'English Assistant',
       required: false
     },
     showTitle: {
