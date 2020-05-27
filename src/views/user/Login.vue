@@ -98,6 +98,15 @@
           :disabled="state.loginBtn"
         >确定
         </a-button>
+        <a-button
+          @click="getAllUserTest"
+          size="large"
+          type="primary"
+          class="login-button"
+          :loading="state.loginBtn"
+          :disabled="state.loginBtn"
+        >获得全部用户Test
+        </a-button>
       </a-form-item>
 
 
@@ -113,6 +122,7 @@
   import {mapActions} from 'vuex'
   import {timeFix} from '@/utils/util'
   import {getSmsCaptcha, get2step} from '@/api/login'
+  import {getAllUsers} from "@/api/userApi"
 
   export default {
     components: {
@@ -231,15 +241,6 @@
           }
         })
       },
-      stepCaptchaSuccess() {
-        this.loginSuccess()
-      },
-      stepCaptchaCancel() {
-        this.Logout().then(() => {
-          this.loginBtn = false
-          this.stepCaptchaVisible = false
-        })
-      },
       loginSuccess(res) {
         console.log(res)
         this.$router.push({path: '/'})
@@ -259,6 +260,13 @@
           description: ((err.response || {}).data || {}).message || '请求出现错误，请稍后再试',
           duration: 4
         })
+      },
+      getAllUserTest() {
+        getAllUsers().then(res => {
+          console.log(res);
+        }).catch(err => {
+          console.log(err);
+        });
       }
     }
   }
