@@ -1,5 +1,5 @@
 <template>
-  <div class="main">
+  <div class="main" v-if="noUser">
     <a-form
       id="formLogin"
       class="user-layout-login"
@@ -26,7 +26,11 @@
               placeholder="请输入账号"
               v-decorator="[
                 'username',
-                {rules: [{ required: true, message: '请输入账号' }, { validator: handleUsernameOrEmail }], validateTrigger: 'change'}
+                {rules:
+                  [
+                    { required: true, message: '请输入手机号' }
+                  ]
+                }
               ]"
             >
               <a-icon slot="prefix" type="user" :style="{ color: 'rgba(0,0,0,.25)' }"/>
@@ -98,17 +102,7 @@
           :disabled="state.loginBtn"
         >确定
         </a-button>
-        <a-button
-          @click="getAllUserTest"
-          size="large"
-          type="primary"
-          class="login-button"
-          :loading="state.loginBtn"
-          :disabled="state.loginBtn"
-        >获得全部用户Test
-        </a-button>
       </a-form-item>
-
 
     </a-form>
 
@@ -117,17 +111,13 @@
 </template>
 
 <script>
-  import md5 from 'md5'
-  import TwoStepCaptcha from '@/components/tools/TwoStepCaptcha'
   import {mapActions} from 'vuex'
   import {timeFix} from '@/utils/util'
-  import {getSmsCaptcha, get2step} from '@/api/login'
-  import {getAllUsers} from "@/api/userApi"
+  import {getSmsCaptcha} from '@/api/login'
+  import {CURRENT_USER} from "@/store/mutation-types";
+  import Vue from 'vue'
 
   export default {
-    components: {
-      TwoStepCaptcha
-    },
     data() {
       return {
         customActiveKey: 'tab1',
@@ -144,36 +134,34 @@
           // login type: 0 email, 1 username, 2 telephone
           loginType: 0,
           smsSendBtn: false
-        }
+        },
+        noUser: false
       }
     },
     created() {
-      get2step({})
-        .then(res => {
-          this.requiredTwoStepCaptcha = res.result.stepCode
-        })
-        .catch(() => {
-          this.requiredTwoStepCaptcha = false
-        })
-      // this.requiredTwoStepCaptcha = true
+      this.noUser = !!!Vue.ls.get(CURRENT_USER);
+      // 判断是否登录
+      if (!this.noUser) {
+        this.$router.push({path: '/'})
+        // 延迟 1 秒显示欢迎信息
+        setTimeout(() => {
+          this.$notification.success({
+            message: '提示',
+            description: `已经登录，请不要重复登录`
+          })
+        }, 1000);
+      }
     },
     methods: {
+      // 使用对象展开运算符将此对象混入到外部对象中
+      // 从而可以简单的调用vuex 的actions
       ...mapActions(['Login', 'Logout']),
-      // handler
-      handleUsernameOrEmail(rule, value, callback) {
-        const {state} = this
-        const regex = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/
-        if (regex.test(value)) {
-          state.loginType = 0
-        } else {
-          state.loginType = 1
-        }
-        callback()
-      },
+
       handleTabClick(key) {
         this.customActiveKey = key
         // this.form.resetFields()
       },
+      // 处理登录表单
       handleSubmit(e) {
         e.preventDefault()
         const {
@@ -182,31 +170,34 @@
           customActiveKey,
           Login
         } = this
-
+        // 设置登录loading为true
         state.loginBtn = true
 
+        // 判断登录方式
         const validateFieldsKey = customActiveKey === 'tab1' ? ['username', 'password'] : ['mobile', 'captcha']
 
+        // 对于数据进行验证
         validateFields(validateFieldsKey, {force: true}, (err, values) => {
+          //无错误进行请求
           if (!err) {
-            console.log('login form', values)
-            const loginParams = {...values}
-            delete loginParams.username
-            loginParams[!state.loginType ? 'email' : 'username'] = values.username
-            loginParams.password = md5(values.password)
+            const loginParams = {};
+            loginParams.phone = values.username;
+            loginParams.password = values.password;
             Login(loginParams)
               .then((res) => this.loginSuccess(res))
               .catch(err => this.requestFailed(err))
               .finally(() => {
-                state.loginBtn = false
+                state.loginBtn = false;
               })
           } else {
+            // 将登录loading设置为false
             setTimeout(() => {
               state.loginBtn = false
             }, 600)
           }
         })
       },
+      // 获取验证码
       getCaptcha(e) {
         e.preventDefault()
         const {form: {validateFields}, state} = this
@@ -241,8 +232,8 @@
           }
         })
       },
+      // 登录成功
       loginSuccess(res) {
-        console.log(res)
         this.$router.push({path: '/'})
         // 延迟 1 秒显示欢迎信息
         setTimeout(() => {
@@ -260,13 +251,6 @@
           description: ((err.response || {}).data || {}).message || '请求出现错误，请稍后再试',
           duration: 4
         })
-      },
-      getAllUserTest() {
-        getAllUsers().then(res => {
-          console.log(res);
-        }).catch(err => {
-          console.log(err);
-        });
       }
     }
   }

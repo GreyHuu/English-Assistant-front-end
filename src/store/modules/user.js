@@ -1,7 +1,8 @@
 import Vue from 'vue'
-import { login, getInfo, logout } from '@/api/login'
-import { ACCESS_TOKEN } from '@/store/mutation-types'
-import { welcome } from '@/utils/util'
+import {getInfo, logout} from '@/api/login'
+import {login} from "@/api/userApi"
+import {ACCESS_TOKEN, CURRENT_USER} from '@/store/mutation-types'
+import {welcome} from '@/utils/util'
 
 const user = {
   state: {
@@ -12,33 +13,43 @@ const user = {
     roles: [],
     info: {}
   },
-
+  //用于同步操作
   mutations: {
+    //设置token
     SET_TOKEN: (state, token) => {
       state.token = token
     },
-    SET_NAME: (state, { name, welcome }) => {
+    //设置昵称
+    SET_NAME: (state, {name, welcome}) => {
       state.name = name
       state.welcome = welcome
     },
+    // 设置头像
     SET_AVATAR: (state, avatar) => {
       state.avatar = avatar
     },
+    // 设置角色
     SET_ROLES: (state, roles) => {
       state.roles = roles
     },
+    // 用户信息
     SET_INFO: (state, info) => {
       state.info = info
     }
   },
-
+  // 用于异步操作
   actions: {
     // 登录
-    Login ({ commit }, userInfo) {
+    Login({commit}, userInfo) {
       return new Promise((resolve, reject) => {
         login(userInfo).then(response => {
-          const result = response.result
+          console.log(response);
+          const result = response.data;
+          // 将token放入localStorage
           Vue.ls.set(ACCESS_TOKEN, result.token, 7 * 24 * 60 * 60 * 1000)
+          //将用户名称放入localStorage进去是否登录判断
+          Vue.ls.set(CURRENT_USER, result.userName, 7 * 24 * 60 * 60 * 1000);
+          // state中放入token
           commit('SET_TOKEN', result.token)
           resolve()
         }).catch(error => {
@@ -48,7 +59,7 @@ const user = {
     },
 
     // 获取用户信息
-    GetInfo ({ commit }) {
+    GetInfo({commit}) {
       return new Promise((resolve, reject) => {
         getInfo().then(response => {
           const result = response.result
@@ -58,18 +69,22 @@ const user = {
             role.permissions = result.role.permissions
             role.permissions.map(per => {
               if (per.actionEntitySet != null && per.actionEntitySet.length > 0) {
-                const action = per.actionEntitySet.map(action => { return action.action })
+                const action = per.actionEntitySet.map(action => {
+                  return action.action
+                })
                 per.actionList = action
               }
             })
-            role.permissionList = role.permissions.map(permission => { return permission.permissionId })
+            role.permissionList = role.permissions.map(permission => {
+              return permission.permissionId
+            })
             commit('SET_ROLES', result.role)
             commit('SET_INFO', result)
           } else {
             reject(new Error('getInfo: roles must be a non-null array !'))
           }
 
-          commit('SET_NAME', { name: result.name, welcome: welcome() })
+          commit('SET_NAME', {name: result.name, welcome: welcome()})
           commit('SET_AVATAR', result.avatar)
 
           resolve(response)
@@ -80,7 +95,7 @@ const user = {
     },
 
     // 登出
-    Logout ({ commit, state }) {
+    Logout({commit, state}) {
       return new Promise((resolve) => {
         logout(state.token).then(() => {
           resolve()

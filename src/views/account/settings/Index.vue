@@ -34,62 +34,62 @@
 </template>
 
 <script>
-import { PageView, RouteView } from '@/layouts'
-import { mixinDevice } from '@/utils/mixin.js'
+  import {PageView, RouteView} from '@/layouts'
+  import {mixinDevice} from '@/utils/mixin.js'
 
-export default {
-  components: {
-    RouteView,
-    PageView
-  },
-  mixins: [mixinDevice],
-  data () {
-    return {
-      // horizontal  inline
-      mode: 'inline',
-
-      openKeys: [],
-      selectedKeys: [],
-
-      // cropper
-      preview: {},
-      option: {
-        img: '/avatar2.jpg',
-        info: true,
-        size: 1,
-        outputType: 'jpeg',
-        canScale: false,
-        autoCrop: true,
-        // 只有自动截图开启 宽度高度才生效
-        autoCropWidth: 180,
-        autoCropHeight: 180,
-        fixedBox: true,
-        // 开启宽度和高度比例
-        fixed: true,
-        fixedNumber: [1, 1]
-      },
-
-      pageTitle: ''
-    }
-  },
-  mounted () {
-    this.updateMenu()
-  },
-  methods: {
-    onOpenChange (openKeys) {
-      this.openKeys = openKeys
+  export default {
+    components: {
+      RouteView,
+      PageView
     },
-    updateMenu () {
-      const routes = this.$route.matched.concat()
-      this.selectedKeys = [ routes.pop().path ]
-    }
-  },
-  watch: {
-    '$route' (val) {
+    mixins: [mixinDevice],
+    data() {
+      return {
+        // horizontal  inline
+        mode: 'inline',
+
+        openKeys: [],
+        selectedKeys: [],
+
+        // cropper
+        preview: {},
+        option: {
+          img: '/avatar2.jpg',
+          info: true,
+          size: 1,
+          outputType: 'jpeg',
+          canScale: false,
+          autoCrop: true,
+          // 只有自动截图开启 宽度高度才生效
+          autoCropWidth: 180,
+          autoCropHeight: 180,
+          fixedBox: true,
+          // 开启宽度和高度比例
+          fixed: true,
+          fixedNumber: [1, 1]
+        },
+
+        pageTitle: ''
+      }
+    },
+    mounted() {
       this.updateMenu()
+    },
+    methods: {
+      onOpenChange(openKeys) {
+        this.openKeys = openKeys
+      },
+      updateMenu() {
+        const routes = this.$route.matched.concat()
+        this.selectedKeys = [routes.pop().path]
+      }
+    },
+    watch: {
+      '$route'(val) {
+        this.updateMenu()
+      }
     }
   }
-}
 </script>
 
 <style lang="less" scoped>
@@ -110,6 +110,7 @@ export default {
         overflow-x: auto;
         overflow-y: scroll;
       }
+
       .account-settings-info-right {
         padding: 20px 40px;
       }
@@ -125,12 +126,13 @@ export default {
       padding: 8px 40px;
 
       .account-settings-info-title {
-        color: rgba(0,0,0,.85);
+        color: rgba(0, 0, 0, .85);
         font-size: 20px;
         font-weight: 500;
         line-height: 28px;
         margin-bottom: 12px;
       }
+
       .account-settings-info-view {
         padding-top: 12px;
       }

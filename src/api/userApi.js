@@ -1,20 +1,18 @@
 import api from './index'
-import { axios } from '@/utils/request'
+import {axios} from '@/utils/request'
 
 /**
- * login func
+ * 登录
  * parameter: {
- *     username: '',
+ *     phone: '',
  *     password: '',
- *     remember_me: true,
- *     captcha: '12345'
  * }
  * @param parameter
  * @returns {*}
  */
-export function login (parameter) {
+export function login(parameter) {
   return axios({
-    url: '/auth/login',
+    url: api.Login,
     method: 'post',
     data: parameter
   })
@@ -26,7 +24,7 @@ export function login (parameter) {
  */
 export function getAllUsers() {
   return axios({
-    url: 'http://localhost:8888/users/get-all-users',
+    url: api.GetAllUser,
     method: 'get',
   })
 }
