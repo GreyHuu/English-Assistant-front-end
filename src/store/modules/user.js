@@ -43,15 +43,19 @@ const user = {
     Login({commit}, userInfo) {
       return new Promise((resolve, reject) => {
         login(userInfo).then(response => {
-          console.log(response);
-          const result = response.data;
-          // 将token放入localStorage
-          Vue.ls.set(ACCESS_TOKEN, result.token, 7 * 24 * 60 * 60 * 1000)
-          //将用户名称放入localStorage进去是否登录判断
-          Vue.ls.set(CURRENT_USER, result.userName, 7 * 24 * 60 * 60 * 1000);
-          // state中放入token
-          commit('SET_TOKEN', result.token)
-          resolve()
+          const {data} = response;
+          // 成功
+          if (response) {
+            // 将token放入localStorage
+            Vue.ls.set(ACCESS_TOKEN, data.token, 7 * 24 * 60 * 60 * 1000)
+            //将用户名称放入localStorage进去是否登录判断
+            Vue.ls.set(CURRENT_USER, data.userName, 7 * 24 * 60 * 60 * 1000);
+            // state中放入token
+            commit('SET_TOKEN', result.token);
+            resolve();
+          } else { //失败
+            reject();
+          }
         }).catch(error => {
           reject(error)
         })

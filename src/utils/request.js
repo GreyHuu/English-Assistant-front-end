@@ -2,8 +2,8 @@ import Vue from 'vue'
 import axios from 'axios'
 import store from '@/store'
 import notification from 'ant-design-vue/es/notification'
-import { VueAxios } from './axios'
-import { ACCESS_TOKEN } from '@/store/mutation-types'
+import {VueAxios} from './axios'
+import {ACCESS_TOKEN} from '@/store/mutation-types'
 
 // 创建 axios 实例
 const service = axios.create({
@@ -14,7 +14,7 @@ const service = axios.create({
 const err = (error) => {
   if (error.response) {
     const data = error.response.data
-    const token = Vue.ls.get(ACCESS_TOKEN)
+    const token = Vue.ls.get(ACCESS_TOKEN);
     if (error.response.status === 403) {
       notification.error({
         message: '禁止访问',
@@ -49,12 +49,24 @@ service.interceptors.request.use(config => {
 
 // response interceptor
 service.interceptors.response.use((response) => {
-  return response.data
+  console.log(response);
+  const {code, message} = response.data;
+  if (parseInt(code) !== 100) {
+    notification.error({
+      message: '错误',
+      description: message || '请求出现错误，请稍后再试',
+      duration: 4
+    })
+    return {};
+  } else {
+    return response.data
+  }
+
 }, err)
 
 const installer = {
   vm: {},
-  install (Vue) {
+  install(Vue) {
     Vue.use(VueAxios, service)
   }
 }

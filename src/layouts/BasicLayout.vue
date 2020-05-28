@@ -1,5 +1,5 @@
 <template>
-  <a-layout :class="['layout', device]">
+  <a-layout :class="['layout', device]" v-if="is_login">
     <!-- SideMenu -->
     <a-drawer
       v-if="isMobile()"
@@ -73,6 +73,8 @@
   import SettingDrawer from '@/components/SettingDrawer'
   import {convertRoutes} from '@/utils/routeConvert'
   import {asyncRouterMap} from '@/config/router.config.js'
+  import Vue from "vue";
+  import {ACCESS_TOKEN, CURRENT_USER} from "@/store/mutation-types";
 
   export default {
     name: 'BasicLayout',
@@ -88,7 +90,8 @@
       return {
         production: config.production,
         collapsed: false,
-        menus: []
+        menus: [],
+        is_login: false
       }
     },
     computed: {
@@ -112,15 +115,32 @@
       }
     },
     created() {
-
-      // const routes = convertRoutes(this.mainMenu.find(item => item.path === '/'))
-      // this.menus = (routes && routes.children) || []
+      // 判断是否登录
+      const user = Vue.ls.get(CURRENT_USER);
+      // 未登录
+      if (!(!!user)) {
+        this.$router.push({path: '/user'})
+        Vue.ls.remove(ACCESS_TOKEN);
+        Vue.ls.remove(CURRENT_USER)
+        // 延迟 1 秒显示信息
+        setTimeout(() => {
+          this.$notification.error({
+            message: '提示',
+            description: `还未登录，请先登录`
+          })
+        }, 1000);
+      } else {
+        this.is_login = true;
+      }
       /**
        * 去除权限
        */
+      // const routes = convertRoutes(this.mainMenu.find(item => item.path === '/'))
+      // this.menus = (routes && routes.children) || []
       this.menus = asyncRouterMap.find((item) => item.path === '/').children
       this.collapsed = !this.sidebarOpened
-    },
+    }
+    ,
     mounted() {
       const userAgent = navigator.userAgent
       if (userAgent.indexOf('Edge') > -1) {
@@ -131,14 +151,17 @@
           }, 16)
         })
       }
-    },
+    }
+    ,
     methods: {
-      ...mapActions(['setSidebar']),
+      ...
+        mapActions(['setSidebar']),
       toggle() {
         this.collapsed = !this.collapsed
         this.setSidebar(!this.collapsed)
         triggerWindowResizeEvent()
-      },
+      }
+      ,
       paddingCalc() {
         let left = ''
         if (this.sidebarOpened) {
@@ -147,9 +170,11 @@
           left = (this.isMobile() && '0') || ((this.fixSidebar && '80px') || '0')
         }
         return left
-      },
+      }
+      ,
       menuSelect() {
-      },
+      }
+      ,
       drawerClose() {
         this.collapsed = false
       }

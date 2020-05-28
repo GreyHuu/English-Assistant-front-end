@@ -1,5 +1,5 @@
 <template>
-  <div class="main" v-if="noUser">
+  <div class="main">
     <a-form
       id="formLogin"
       class="user-layout-login"
@@ -114,8 +114,6 @@
   import {mapActions} from 'vuex'
   import {timeFix} from '@/utils/util'
   import {getSmsCaptcha} from '@/api/login'
-  import {CURRENT_USER} from "@/store/mutation-types";
-  import Vue from 'vue'
 
   export default {
     data() {
@@ -134,22 +132,7 @@
           // login type: 0 email, 1 username, 2 telephone
           loginType: 0,
           smsSendBtn: false
-        },
-        noUser: false
-      }
-    },
-    created() {
-      this.noUser = !!!Vue.ls.get(CURRENT_USER);
-      // 判断是否登录
-      if (!this.noUser) {
-        this.$router.push({path: '/'})
-        // 延迟 1 秒显示欢迎信息
-        setTimeout(() => {
-          this.$notification.success({
-            message: '提示',
-            description: `已经登录，请不要重复登录`
-          })
-        }, 1000);
+        }
       }
     },
     methods: {
@@ -246,11 +229,6 @@
       },
       requestFailed(err) {
         this.isLoginError = true
-        this.$notification['error']({
-          message: '错误',
-          description: ((err.response || {}).data || {}).message || '请求出现错误，请稍后再试',
-          duration: 4
-        })
       }
     }
   }
