@@ -3,11 +3,12 @@ import axios from 'axios'
 import store from '@/store'
 import notification from 'ant-design-vue/es/notification'
 import {VueAxios} from './axios'
-import {ACCESS_TOKEN} from '@/store/mutation-types'
+import {ACCESS_TOKEN, SESSION_ID} from '@/store/mutation-types'
 
 // 创建 axios 实例
 const service = axios.create({
-  baseURL: process.env.VUE_APP_API_BASE_URL, // api base_url
+  withCredentials: true,  //允许cookie
+  // baseURL: process.env.VUE_APP_API_BASE_URL, // api base_url
   timeout: 6000 // 请求超时时间
 })
 
@@ -29,7 +30,7 @@ const err = (error) => {
       if (token) {
         store.dispatch('Logout').then(() => {
           setTimeout(() => {
-            window.location.reload()
+            this.$router.push({path: "/user"})
           }, 1500)
         })
       }
@@ -41,15 +42,18 @@ const err = (error) => {
 // request interceptor
 service.interceptors.request.use(config => {
   const token = Vue.ls.get(ACCESS_TOKEN)
+  const session = Vue.ls.get(SESSION_ID)
   if (token) {
     config.headers['Access-Token'] = token // 让每个请求携带自定义 token 请根据实际情况自行修改
+  }
+  if (session) {
+    config.headers['Session_Id'] = session // 让每个请求携带自定义 session_id 请根据实际情况自行修改
   }
   return config
 }, err)
 
 // response interceptor
 service.interceptors.response.use((response) => {
-  console.log(response);
   const {code, message} = response.data;
   if (parseInt(code) !== 100) {
     notification.error({
@@ -67,6 +71,7 @@ service.interceptors.response.use((response) => {
 const installer = {
   vm: {},
   install(Vue) {
+    service.defaults.withCredentials = true;
     Vue.use(VueAxios, service)
   }
 }

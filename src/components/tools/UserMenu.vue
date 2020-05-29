@@ -47,7 +47,7 @@
           onOk: () => {
             return this.Logout({}).then(() => {
               setTimeout(() => {
-                window.location.reload()
+                this.$router.push({path: "/user"})
               }, 16)
             }).catch(err => {
               this.$message.error({

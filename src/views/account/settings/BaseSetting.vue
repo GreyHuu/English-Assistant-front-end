@@ -7,7 +7,7 @@
           <a-form-item
             label="昵称"
           >
-            <a-input placeholder="给自己起个名字" />
+            <a-input placeholder="给自己起个名字"/>
           </a-form-item>
           <a-form-item
             label="Bio"
@@ -52,10 +52,10 @@
 
       </a-col>
       <a-col :md="24" :lg="8" :style="{ minHeight: '180px' }">
-        <div class="ant-upload-preview" @click="$refs.modal.edit(1)" >
+        <div class="ant-upload-preview" @click="$refs.modal.edit(1)">
           <a-icon type="cloud-upload-o" class="upload-icon"/>
           <div class="mask">
-            <a-icon type="plus" />
+            <a-icon type="plus"/>
           </div>
           <img :src="option.img"/>
         </div>
@@ -69,39 +69,43 @@
 </template>
 
 <script>
-import AvatarModal from './AvatarModal'
+  import AvatarModal from './AvatarModal'
+  import {getAllUsers} from "@/api/userApi";
 
-export default {
-  components: {
-    AvatarModal
-  },
-  data () {
-    return {
-      // cropper
-      preview: {},
-      option: {
-        img: '/avatar2.jpg',
-        info: true,
-        size: 1,
-        outputType: 'jpeg',
-        canScale: false,
-        autoCrop: true,
-        // 只有自动截图开启 宽度高度才生效
-        autoCropWidth: 180,
-        autoCropHeight: 180,
-        fixedBox: true,
-        // 开启宽度和高度比例
-        fixed: true,
-        fixedNumber: [1, 1]
+  export default {
+    components: {
+      AvatarModal
+    },
+    created() {
+      getAllUsers();
+    },
+    data() {
+      return {
+        // cropper
+        preview: {},
+        option: {
+          img: '/avatar2.jpg',
+          info: true,
+          size: 1,
+          outputType: 'jpeg',
+          canScale: false,
+          autoCrop: true,
+          // 只有自动截图开启 宽度高度才生效
+          autoCropWidth: 180,
+          autoCropHeight: 180,
+          fixedBox: true,
+          // 开启宽度和高度比例
+          fixed: true,
+          fixedNumber: [1, 1]
+        }
+      }
+    },
+    methods: {
+      setavatar(url) {
+        this.option.img = url
       }
     }
-  },
-  methods: {
-    setavatar (url) {
-      this.option.img = url
-    }
   }
-}
 </script>
 
 <style lang="less" scoped>
@@ -129,10 +133,11 @@ export default {
       border-radius: 50%;
       border: 1px solid rgba(0, 0, 0, 0.2);
     }
+
     .mask {
       opacity: 0;
       position: absolute;
-      background: rgba(0,0,0,0.4);
+      background: rgba(0, 0, 0, 0.4);
       cursor: pointer;
       transition: opacity 0.4s;
 

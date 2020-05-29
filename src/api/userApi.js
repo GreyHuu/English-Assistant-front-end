@@ -3,10 +3,6 @@ import {axios} from '@/utils/request'
 
 /**
  * 登录
- * parameter: {
- *     phone: '',
- *     password: '',
- * }
  * @param parameter
  * @returns {*}
  */
@@ -17,6 +13,66 @@ export function login(parameter) {
     data: parameter
   })
 }
+
+/**
+ * 通过手机验证码登录
+ * @param parameter
+ * @returns {AxiosPromise}
+ */
+export function loginByPhone(parameter) {
+  return axios({
+    url: api.LoginByPhone,
+    method: 'post',
+    data: parameter
+  })
+}
+
+/**
+ * 发送手机号 获得验证码
+ * @param parameter
+ * @returns {AxiosPromise}
+ */
+export function getSmsCaptcha(parameter) {
+  return axios({
+    url: api.SendSms,
+    method: 'post',
+    data: parameter
+  })
+}
+
+/**
+ * 匹配验证码
+ * @param parameter
+ * @returns {AxiosPromise}
+ */
+export function compareCode(parameter) {
+  return axios({
+    url: api.CompareSms,
+    method: 'post',
+    data: parameter
+  })
+}
+
+/**
+ * 注册
+ * @param paramater
+ * @returns {AxiosPromise}
+ */
+export function register(paramater) {
+  return axios({
+    url: api.Register,
+    method: "post",
+    data: paramater
+  })
+}
+
+export function logout() {
+  return axios({
+    url: api.Logout,
+    method: "get"
+  })
+}
+
 
 /**
  * 测试后台跨域处理的测试接口

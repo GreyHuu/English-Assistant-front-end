@@ -1,8 +1,8 @@
 import Vue from 'vue'
-import {getInfo, logout} from '@/api/login'
-import {login} from "@/api/userApi"
-import {ACCESS_TOKEN, CURRENT_USER} from '@/store/mutation-types'
-import {welcome} from '@/utils/util'
+import {getInfo} from '@/api/login'
+import {login, loginByPhone, logout} from "@/api/userApi"
+import {ACCESS_TOKEN, CURRENT_USER, SESSION_ID} from '@/store/mutation-types'
+import {isSuccess, welcome} from '@/utils/util'
 
 const user = {
   state: {
@@ -43,16 +43,18 @@ const user = {
     Login({commit}, userInfo) {
       return new Promise((resolve, reject) => {
         login(userInfo).then(response => {
-          const {data} = response;
+          const {data, code} = response;
           // 成功
-          if (response) {
+          if (isSuccess(code)) {
             // 将token放入localStorage
-            Vue.ls.set(ACCESS_TOKEN, data.token, 7 * 24 * 60 * 60 * 1000)
+            Vue.ls.set(ACCESS_TOKEN, data.token, 7 * 24 * 60 * 60 * 1000);
+            //放入sessionId
+            Vue.ls.set(SESSION_ID, data.session, 7 * 24 * 60 * 60 * 1000)
             //将用户名称放入localStorage进去是否登录判断
             Vue.ls.set(CURRENT_USER, data.userName, 7 * 24 * 60 * 60 * 1000);
             // state中放入token
-            commit('SET_TOKEN', result.token);
-            resolve();
+            commit('SET_TOKEN', data.token);
+            resolve(response);
           } else { //失败
             reject();
           }
@@ -61,7 +63,28 @@ const user = {
         })
       })
     },
-
+// 通过手机号登录
+    LoginByPhone({commit}, userInfo) {
+      return new Promise((resolve, reject) => {
+        loginByPhone(userInfo).then(response => {
+          const {data, code} = response;
+          // 成功
+          if (isSuccess(code)) {
+            // 将token放入localStorage
+            Vue.ls.set(ACCESS_TOKEN, data.token, 7 * 24 * 60 * 60 * 1000)
+            //将用户名称放入localStorage进去是否登录判断
+            Vue.ls.set(CURRENT_USER, data.userName, 7 * 24 * 60 * 60 * 1000);
+            // state中放入token
+            commit('SET_TOKEN', data.token);
+            resolve(response);
+          } else { //失败
+            reject();
+          }
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
     // 获取用户信息
     GetInfo({commit}) {
       return new Promise((resolve, reject) => {
@@ -108,7 +131,10 @@ const user = {
         }).finally(() => {
           commit('SET_TOKEN', '')
           commit('SET_ROLES', [])
-          Vue.ls.remove(ACCESS_TOKEN)
+          Vue.ls.remove(SESSION_ID);
+          Vue.ls.remove(ACCESS_TOKEN);
+          Vue.ls.remove(CURRENT_USER);
+
         })
       })
     }

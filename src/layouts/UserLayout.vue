@@ -5,7 +5,7 @@
         <div class="header">
           <a href="/">
             <img src="../../public/english-input.png" class="logo" alt="logo">
-            <span class="title">English Assistant</span>
+            <span class="title" style="color:#13C2C2">English Assistant</span>
           </a>
         </div>
         <div class="desc">
@@ -21,6 +21,8 @@
         </div>
       </div>
     </div>
+    <!-- Setting Drawer (show in development mode) -->
+    <setting-drawer v-if="!production"></setting-drawer>
   </div>
 </template>
 
@@ -29,13 +31,17 @@
   import {mixinDevice} from '@/utils/mixin'
   import Vue from "vue";
   import {CURRENT_USER} from "@/store/mutation-types";
+  import config from '@/config/defaultSettings'
+  import SettingDrawer from "@/components/SettingDrawer";
+
 
   export default {
     name: 'UserLayout',
-    components: {RouteView},
+    components: {RouteView, SettingDrawer},
     mixins: [mixinDevice],
     data() {
       return {
+        production: config.production,
         is_login: false
       }
     },
@@ -68,6 +74,7 @@
 <style lang="less" scoped>
   #userLayout.user-layout-wrapper {
     height: 100%;
+
 
     &.mobile {
       .container {

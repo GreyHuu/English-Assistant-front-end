@@ -70,7 +70,7 @@
                   size="large"
                   type="text"
                   placeholder="验证码"
-                  v-decorator="['captcha', {rules: [{ required: true, message: '请输入验证码' }], validateTrigger: 'blur'}]">
+                  v-decorator="['code', {rules: [{ required: true, message: '请输入验证码' }], validateTrigger: 'blur'}]">
                   <a-icon slot="prefix" type="mail" :style="{ color: 'rgba(0,0,0,.25)' }"/>
                 </a-input>
               </a-form-item>
@@ -112,8 +112,11 @@
 
 <script>
   import {mapActions} from 'vuex'
-  import {timeFix} from '@/utils/util'
+  import {isSuccess, timeFix} from '@/utils/util'
   import {getSmsCaptcha} from '@/api/login'
+  import {compareCode, register} from "@/api/userApi";
+  import Vue from "vue";
+  import {SESSION_ID} from "@/store/mutation-types";
 
   export default {
     data() {
@@ -138,7 +141,7 @@
     methods: {
       // 使用对象展开运算符将此对象混入到外部对象中
       // 从而可以简单的调用vuex 的actions
-      ...mapActions(['Login', 'Logout']),
+      ...mapActions(['Login', 'Logout', 'LoginByPhone']),
 
       handleTabClick(key) {
         this.customActiveKey = key
@@ -151,33 +154,63 @@
           form: {validateFields},
           state,
           customActiveKey,
-          Login
+          Login,
+          LoginByPhone
         } = this
         // 设置登录loading为true
         state.loginBtn = true
 
         // 判断登录方式
-        const validateFieldsKey = customActiveKey === 'tab1' ? ['username', 'password'] : ['mobile', 'captcha']
+        const validateFieldsKey = customActiveKey === 'tab1' ? ['username', 'password'] : ['mobile', 'code']
 
         // 对于数据进行验证
         validateFields(validateFieldsKey, {force: true}, (err, values) => {
           //无错误进行请求
           if (!err) {
             const loginParams = {};
-            loginParams.phone = values.username;
-            loginParams.password = values.password;
-            Login(loginParams)
-              .then((res) => this.loginSuccess(res))
-              .catch(err => this.requestFailed(err))
-              .finally(() => {
-                state.loginBtn = false;
+            // 账号密码登录
+            if (customActiveKey === 'tab1') {
+              loginParams.phone = values.username;
+              loginParams.password = values.password;
+              Login(loginParams)
+                .then(res => {
+                  if (isSuccess(res.code)) {
+                    this.loginSuccess(res)
+                  } else {
+                    this.requestFailed(res)
+                  }
+                })
+                .catch(err => this.requestFailed(err))
+                .finally(() => {
+                  state.loginBtn = false;
+                })
+            } else {   //手机验证码登录
+              // 先比较验证码
+              compareCode({code: values.code}).then(res => {
+                if (isSuccess(res.code)) {
+                  loginParams.phone = values.mobile;
+                  LoginByPhone(loginParams)
+                    .then(res => {
+                      if (isSuccess(res.code)) {
+                        this.loginSuccess(res)
+                      } else {
+                        this.requestFailed(res)
+                      }
+                    })
+                    .catch(err => this.requestFailed(err))
+                    .finally(() => {
+                      state.loginBtn = false;
+                    })
+                }
               })
+            }
           } else {
             // 将登录loading设置为false
             setTimeout(() => {
               state.loginBtn = false
             }, 600)
           }
+
         })
       },
       // 获取验证码
@@ -198,15 +231,25 @@
             }, 1000)
 
             const hide = this.$message.loading('验证码发送中..', 0)
-            getSmsCaptcha({mobile: values.mobile}).then(res => {
-              setTimeout(hide, 2500)
-              this.$notification['success']({
-                message: '提示',
-                description: '验证码获取成功，您的验证码为：' + res.result.captcha,
-                duration: 8
-              })
+            getSmsCaptcha({phone: values.mobile}).then(res => {
+              Vue.ls.set(SESSION_ID, res.data.session, 7 * 24 * 60 * 60 * 1000)
+              if (isSuccess(res.code)) {
+                setTimeout(() => {
+                  this.$message.success(
+                    '验证码发送成功'
+                  )
+                  hide();
+                }, 2500)
+              } else {
+                this.$message.error(
+                  '验证码发送失败'
+                );
+              }
             }).catch(err => {
               setTimeout(hide, 1)
+              this.$message.error(
+                '验证码发送失败'
+              );
               clearInterval(interval)
               state.time = 60
               state.smsSendBtn = false
@@ -229,6 +272,7 @@
       },
       requestFailed(err) {
         this.isLoginError = true
+        console.log(err);
       }
     }
   }

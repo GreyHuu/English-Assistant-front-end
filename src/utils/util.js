@@ -1,10 +1,10 @@
-export function timeFix () {
+export function timeFix() {
   const time = new Date()
   const hour = time.getHours()
   return hour < 9 ? '早上好' : hour <= 11 ? '上午好' : hour <= 13 ? '中午好' : hour < 20 ? '下午好' : '晚上好'
 }
 
-export function welcome () {
+export function welcome() {
   const arr = ['休息一会儿吧', '准备吃什么呢?', '要不要打一把 DOTA', '我猜你可能累了']
   const index = Math.floor(Math.random() * arr.length)
   return arr[index]
@@ -13,18 +13,19 @@ export function welcome () {
 /**
  * 触发 window.resize
  */
-export function triggerWindowResizeEvent () {
+export function triggerWindowResizeEvent() {
   const event = document.createEvent('HTMLEvents')
   event.initEvent('resize', true, true)
   event.eventType = 'message'
   window.dispatchEvent(event)
 }
 
-export function handleScrollHeader (callback) {
+export function handleScrollHeader(callback) {
   let timer = 0
 
   let beforeScrollTop = window.pageYOffset
-  callback = callback || function () {}
+  callback = callback || function () {
+  }
   window.addEventListener(
     'scroll',
     event => {
@@ -45,7 +46,7 @@ export function handleScrollHeader (callback) {
   )
 }
 
-export function isIE () {
+export function isIE() {
   const bw = window.navigator.userAgent
   const compare = (s) => bw.indexOf(s) >= 0
   const ie11 = (() => 'ActiveXObject' in window)()
@@ -57,11 +58,22 @@ export function isIE () {
  * @param id parent element id or class
  * @param timeout
  */
-export function removeLoadingAnimate (id = '', timeout = 1500) {
+export function removeLoadingAnimate(id = '', timeout = 1500) {
   if (id === '') {
     return
   }
   setTimeout(() => {
     document.body.removeChild(document.getElementById(id))
   }, timeout)
+}
+
+/**
+ * 判断请求是否成功
+ * 100是成功
+ * 其他是不成功
+ * @param code
+ * @returns {boolean}
+ */
+export function isSuccess(code = "200") {
+  return parseInt(code) === 100;
 }
