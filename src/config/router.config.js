@@ -117,7 +117,7 @@ export const asyncRouterMap = [
       {
         path: '/reading',
         name: 'reading',
-        component: RouteView,
+        component: PageView,
         redirect: '/reading/reading_groups',
         meta: {
           title: '阅读理解',
@@ -127,16 +127,26 @@ export const asyncRouterMap = [
           {
             path: '/reading/reading_groups',
             name: 'reading_groups',
-            component: () => import('@/views/profile/basic/Index'),
+            component: () => import('@/views/reading/ReadingGroup'),
             meta: {
               title: '阅读练习',
               keepAlive: true,
             }
           },
           {
+            path: "/reading/reading_groups/reading",
+            name: "reading_content",
+            hidden: true,
+            component: () => import('@/views/reading/Reading'),
+            meta: {
+              title: '阅读文章',
+              keepAlive: true,
+            }
+          },
+          {
             path: '/reading/reading_lists',
             name: 'reading_lists',
-            component: () => import('@/views/profile/advanced/Advanced'),
+            component: () => import('@/views/reading/ReadingList'),
             meta: {
               title: '阅读记录',
               keepAlive: true,
