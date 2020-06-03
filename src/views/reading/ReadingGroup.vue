@@ -5,12 +5,12 @@
         <a-row :gutter="48">
           <a-col :md="8" :sm="24">
             <a-form-item label="题目组名称">
-              <a-input v-model="queryParam.id" placeholder=""/>
+              <a-input v-model="queryParam.id" placeholder="输入题目组名称"/>
             </a-form-item>
           </a-col>
           <a-col :md="8" :sm="24">
             <a-form-item label="题目名称">
-              <a-input v-model="queryParam.id" placeholder=""/>
+              <a-input v-model="queryParam.id" placeholder="输入题目名称"/>
             </a-form-item>
           </a-col>
           <a-col :md="8" :sm="24">
@@ -33,7 +33,14 @@
         <template>
           <a @click="goToContent(record.id)">练习</a>
           <a-divider type="vertical"/>
-          <a @click="deleteGroup(record.id)">删除</a>
+          <a-popconfirm
+            title="是否确认删除该阅读题目（包括删除包含该阅读题组的记录以及其阅读题）?"
+            ok-text="确认"
+            cancel-text="取消"
+            @confirm="confirmDelete"
+          >
+            <a>删除</a>
+        </a-popconfirm>
         </template>
     </span>
     </a-table>
@@ -42,6 +49,8 @@
 
 <script>
   import {STable} from '@/components'
+  import {getAllGroup} from "@/api/readingApi";
+  import moment from "moment"
 
   export default {
     name: 'ReadingGroup',
@@ -72,19 +81,21 @@
           },
           {
             title: '练习次数',
-            dataIndex: 'number',
+            dataIndex: 'times',
             align: "center",
-            customRender: (text) => text + ' 次'
+            customRender: (text) => text ? text + "次" : "暂无信息"
           },
           {
             title: '最高分数',
             dataIndex: 'score',
-            align: "center"
+            align: "center",
+            customRender: (text) => text ? text : "暂无信息"
           },
           {
             title: '上次练习时间',
             dataIndex: 'time',
-            align: "center"
+            align: "center",
+            customRender: (text) => text ? moment(parseInt(text)).format("YYYY-MM-DD hh:mm:ss") : "暂无信息"
           },
           {
             title: '操作',
@@ -95,164 +106,19 @@
           }
         ],
         //数据
-        data: [
-          {
-            key: 1332,
-            id: 123,
-            title: '题目组ID',
-            description: 'description',
-            number: 4,
-            score: 85,
-            time: "2020-5-29 18:00"
-          },
-          {
-            key: 133,
-            id: 123,
-            title: '题目组ID',
-            description: 'description',
-            number: 4,
-            score: 85,
-            time: "2020-5-29 18:00"
-          },
-          {
-            key: 1334,
-            id: 1334,
-            title: '题目组ID',
-            description: 'description',
-            number: 4,
-            score: 85,
-            time: "2020-5-29 18:00"
-          },
-          {
-            key: 137,
-            id: 137,
-            title: '题目组ID',
-            description: 'description',
-            number: 4,
-            score: 85,
-            time: "2020-5-29 18:00"
-          },
-          {
-            key: 13386795679,
-            id: 13386795679,
-            title: '题目组ID',
-            description: 'description',
-            number: 4,
-            score: 85,
-            time: "2020-5-29 18:00"
-          },
-          {
-            key: 1339342654765,
-            id: 1339342654765,
-            title: '题目组ID',
-            description: 'description',
-            number: 4,
-            score: 85,
-            time: "2020-5-29 18:00"
-          },
-          {
-            key: 133901243214,
-            id: 133901243214,
-            title: '题目组ID',
-            description: 'description',
-            number: 4,
-            score: 85,
-            time: "2020-5-29 18:00"
-          }, {
-            key: 13343254325,
-            id: 13343254325,
-            title: '题目组ID',
-            description: 'description',
-            number: 4,
-            score: 85,
-            time: "2020-5-29 18:00"
-          },
-          {
-            key: 137222344,
-            id: 137222344,
-            title: '题目组ID',
-            description: 'description',
-            number: 4,
-            score: 85,
-            time: "2020-5-29 18:00"
-          },
-          {
-            key: 13311111,
-            id: 13311111,
-            title: '题目组ID',
-            description: 'description',
-            number: 4,
-            score: 85,
-            time: "2020-5-29 18:00"
-          },
-          {
-            key: 1339547,
-            id: 1339547,
-            title: '题目组ID',
-            description: 'description',
-            number: 4,
-            score: 85,
-            time: "2020-5-29 18:00"
-          },
-          {
-            key: 1339043543,
-            id: 1339043543,
-            title: '题目组ID',
-            description: 'description',
-            number: 4,
-            score: 85,
-            time: "2020-5-29 18:00"
-          }, {
-            key: 13341231,
-            id: 13341231,
-            title: '题目组ID',
-            description: 'description',
-            number: 4,
-            score: 85,
-            time: "2020-5-29 18:00"
-          },
-          {
-            key: 1374444,
-            id: 1374444,
-            title: '题目组ID',
-            description: 'description',
-            number: 4,
-            score: 85,
-            time: "2020-5-29 18:00"
-          },
-          {
-            key: 1338222,
-            id: 1338222,
-            title: '题目组ID',
-            description: 'description',
-            number: 4,
-            score: 85,
-            time: "2020-5-29 18:00"
-          },
-          {
-            key: 133912,
-            id: 133912,
-            title: '题目组ID',
-            description: 'description',
-            number: 4,
-            score: 85,
-            time: "2020-5-29 18:00"
-          },
-          {
-            key: 13390123,
-            id: 13390123,
-            title: '题目组ID',
-            description: 'description',
-            number: 4,
-            score: 85,
-            time: "2020-5-29 18:00"
-          }
-        ],
+        data: [],
         //表格loading状态
         loading: false
       }
     },
-    created() {
+    mounted() {
+      this.loading = true;
+      // 获取组
+      getAllGroup().then(res => {
+        const {data} = res;
+        this.data = data;
+        this.loading = false;
+      })
     },
     methods: {
       //跳转到该练习
@@ -266,7 +132,7 @@
         )
       },
       // 删除该练习组
-      deleteGroup(id) {
+      confirmDelete(id) {
 
       }
     }

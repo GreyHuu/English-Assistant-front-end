@@ -16,115 +16,222 @@
 
     <a-card
       style="margin-top: 24px"
-      :bordered="false"
-      title="标准列表">
-
+      title="阅读练习记录">
       <div slot="extra">
         <a-radio-group v-model="status">
           <a-radio-button value="all">全部</a-radio-button>
-          <a-radio-button value="processing">进行中</a-radio-button>
-          <a-radio-button value="waiting">等待中</a-radio-button>
+          <a-radio-button value="week">一周内</a-radio-button>
+          <a-radio-button value="month">一个月内</a-radio-button>
         </a-radio-group>
-        <a-input-search style="margin-left: 16px; width: 272px;"/>
+        <a-input-search style="margin-left: 16px; width: 272px;" placeholder="输入题目组"/>
       </div>
 
-      <div class="operate">
-        <a-button type="dashed" style="width: 100%" icon="plus" @click="$refs.taskForm.add()">添加</a-button>
-      </div>
-
-      <a-list size="large" :pagination="{showSizeChanger: true, showQuickJumper: true, pageSize: 5, total: 50}">
-        <a-list-item :key="index" v-for="(item, index) in data">
-          <a-list-item-meta :description="item.description">
-            <a-avatar slot="avatar" size="large" shape="square" :src="item.avatar"/>
-            <a slot="title">{{ item.title }}</a>
+      <a-list
+        size="large"
+        :pagination="{pageSize: 8}"
+        :data-source="data"
+      >
+        <a-list-item :key="index" slot="renderItem" slot-scope="item, index">
+          <a-list-item-meta>
+            <div slot="title">{{ item.title }}</div>
           </a-list-item-meta>
+          <div class="list-content">
+            <div class="list-content-item">
+              <span>次数</span>
+              <p>{{ item.times }} 次</p>
+            </div>
+            <div class="list-content-item">
+              <span>上次做题时间</span>
+              <p>{{ item.lastTime }}</p>
+            </div>
+            <div class="list-content-item">
+              <span>正确率</span>
+              <br>
+              <a-progress
+                :percent="item.progress.value"
+                style="width: 180px"/>
+            </div>
+          </div>
           <div slot="actions">
-            <a @click="edit(item)">编辑</a>
+            <a @click="checkList(item)">查看</a>
           </div>
           <div slot="actions">
             <a-dropdown>
               <a-menu slot="overlay">
-                <a-menu-item><a>编辑</a></a-menu-item>
-                <a-menu-item><a>删除</a></a-menu-item>
+                <a-menu-item><a @click="redo(item)">重做</a></a-menu-item>
+                <a-menu-item>
+                  <a-popconfirm
+                    title="是否确认删除该阅读记录?"
+                    ok-text="确认"
+                    cancel-text="取消"
+                    @confirm="redo(item)"
+                  >
+                    <a>删除</a>
+                  </a-popconfirm>
+                </a-menu-item>
               </a-menu>
               <a>更多
                 <a-icon type="down"/>
               </a>
             </a-dropdown>
           </div>
-          <div class="list-content">
-            <div class="list-content-item">
-              <span>Owner</span>
-              <p>{{ item.owner }}</p>
-            </div>
-            <div class="list-content-item">
-              <span>开始时间</span>
-              <p>{{ item.startAt }}</p>
-            </div>
-            <div class="list-content-item">
-              <a-progress :percent="item.progress.value" :status="!item.progress.status ? null : item.progress.status"
-                          style="width: 180px"/>
-            </div>
-          </div>
         </a-list-item>
       </a-list>
     </a-card>
+
+    <!--    查看模态-->
+    <a-modal
+      v-model="visible"
+      title="记录详情">
+
+      <template slot="footer">
+        <a-button key="sure" type="primary" @click="cancelModal">
+          确定
+        </a-button>
+        <a-button key="redo" @click="redo">
+          重做
+        </a-button>
+      </template>
+
+      <description-list :title="currentList.title" size="large" :col="two">
+        <description-list-item term="练习次数">
+          {{(currentList.times?currentList.times+"次":false)||"暂无信息"}}
+        </description-list-item>
+        <description-list-item term="练习平均分">
+          {{(currentList.score?currentList.score+"分":false)||"暂无信息"}}
+        </description-list-item>
+        <description-list-item term="练习正确率">
+          {{(currentList.process?(currentList.process.value+"%"):false)||"暂无信息"}}
+        </description-list-item>
+        <description-list-item term="上次练习时间">{{currentList.lastTime||"暂无信息"}}</description-list-item>
+        <description-list-item term="描述">{{currentList.description||"暂无信息"}}</description-list-item>
+      </description-list>
+    </a-modal>
   </div>
 </template>
 
 <script>
   import HeadInfo from '@/components/tools/HeadInfo'
+  import {DescriptionList} from '@/components'
+
+  const DescriptionListItem = DescriptionList.Item
 
   const data = []
   data.push({
-    title: 'Alipay',
-    avatar: 'https://gw.alipayobjects.com/zos/rmsportal/WdGqmHpayyMjiEhcKoVE.png',
-    description: '那是一种内在的东西， 他们到达不了，也无法触及的',
-    owner: '付晓晓',
-    startAt: '2018-07-26 22:44',
+    title: '2006年考研阅读',
+    description: '2006年的考研阅读，难度偏难',
+    times: '5',
+    lastTime: '2018-07-26 22:44',
     progress: {
       value: 90
     }
   })
   data.push({
-    title: 'Angular',
-    avatar: 'https://gw.alipayobjects.com/zos/rmsportal/zOsKZmFRdUtvpqCImOVY.png',
-    description: '希望是一个好东西，也许是最好的，好东西是不会消亡的',
-    owner: '曲丽丽',
-    startAt: '2018-07-26 22:44',
+    title: '2006年考研阅读',
+    description: '2006年的考研阅读，难度偏难',
+    times: '5',
+    lastTime: '2018-07-26 22:44',
     progress: {
-      value: 54
+      value: 90
     }
   })
   data.push({
-    title: 'Ant Design',
-    avatar: 'https://gw.alipayobjects.com/zos/rmsportal/dURIMkkrRFpPgTuzkwnB.png',
-    description: '生命就像一盒巧克力，结果往往出人意料',
-    owner: '林东东',
-    startAt: '2018-07-26 22:44',
+    title: '2006年考研阅读',
+    description: '2006年的考研阅读，难度偏难',
+    times: '5',
+    lastTime: '2018-07-26 22:44',
     progress: {
-      value: 66
+      value: 90
     }
   })
   data.push({
-    title: 'Ant Design Pro',
-    avatar: 'https://gw.alipayobjects.com/zos/rmsportal/sfjbOqnsXXJgNCjCzDBL.png',
-    description: '城镇中有那么多的酒馆，她却偏偏走进了我的酒馆',
-    owner: '周星星',
-    startAt: '2018-07-26 22:44',
+    title: '2006年考研阅读',
+    description: '2006年的考研阅读，难度偏难',
+    times: '5',
+    lastTime: '2018-07-26 22:44',
     progress: {
-      value: 30
+      value: 90
     }
   })
   data.push({
-    title: 'Bootstrap',
-    avatar: 'https://gw.alipayobjects.com/zos/rmsportal/siCrBXXhmvTQGWPNLBow.png',
-    description: '那时候我只会想自己想要什么，从不想自己拥有什么',
-    owner: '吴加好',
-    startAt: '2018-07-26 22:44',
+    title: '2006年考研阅读',
+    description: '2006年的考研阅读，难度偏难',
+    times: '5',
+    lastTime: '2018-07-26 22:44',
     progress: {
-      status: 'exception',
-      value: 100
+      value: 90
+    }
+  })
+  data.push({
+    title: '2006年考研阅读',
+    description: '2006年的考研阅读，难度偏难',
+    times: '5',
+    lastTime: '2018-07-26 22:44',
+    progress: {
+      value: 90
+    }
+  })
+  data.push({
+    title: '2006年考研阅读',
+    description: '2006年的考研阅读，难度偏难',
+    times: '5',
+    lastTime: '2018-07-26 22:44',
+    progress: {
+      value: 90
+    }
+  })
+  data.push({
+    title: '2006年考研阅读',
+    description: '2006年的考研阅读，难度偏难',
+    times: '5',
+    lastTime: '2018-07-26 22:44',
+    progress: {
+      value: 90
+    }
+  })
+  data.push({
+    title: '2006年考研阅读',
+    description: '2006年的考研阅读，难度偏难',
+    times: '5',
+    lastTime: '2018-07-26 22:44',
+    progress: {
+      value: 90
+    }
+  })
+  data.push({
+    title: '2006年考研阅读',
+    description: '2006年的考研阅读，难度偏难',
+    times: '5',
+    lastTime: '2018-07-26 22:44',
+    progress: {
+      value: 90
+    }
+  })
+  data.push({
+    title: '2006年考研阅读',
+    description: '2006年的考研阅读，难度偏难',
+    times: '5',
+    lastTime: '2018-07-26 22:44',
+    progress: {
+      value: 90
+    }
+  })
+  data.push({
+    title: '2006年考研阅读',
+    description: '2006年的考研阅读，难度偏难',
+    times: '5',
+    lastTime: '2018-07-26 22:44',
+    progress: {
+      value: 90
+    }
+  })
+  data.push({
+    title: '2006年考研阅读',
+    description: '2006年的考研阅读，难度偏难',
+    times: '5',
+    lastTime: '2018-07-26 22:44',
+    progress: {
+      value: 90
     }
   })
 
@@ -132,16 +239,51 @@
     name: 'ReadingList',
     components: {
       HeadInfo,
-      TaskForm
+      DescriptionList,
+      DescriptionListItem
     },
     data() {
       return {
         description: "在此处您可以对您做过的阅读练习进行历史记录的查询",
         data,
-        status: 'all'
+        // 时间范围按钮
+        status: 'all',
+        //  查看详情的模态
+        visible: false,
+        // 当前选中的记录
+        currentList: "",
+        //  详细记录里面的列数
+        two: 2
       }
     },
-    methods: {}
+    methods: {
+      //显现详细模态
+      checkList(record) {
+        this.visible = true;
+        this.currentList = record;
+      },
+      // 取消详细模态
+      cancelModal() {
+        this.visible = false;
+        this.currentList = "";
+      },
+      // 重做
+      redo(item) {
+        let id;
+        if (item) {
+          id = item.id;
+        } else {
+          id = this.currentList.id;
+        }
+        this.$router.push({
+            path: "/reading/reading_groups/reading",
+            query: {
+              id: id
+            }
+          }
+        )
+      }
+    }
   }
 </script>
 

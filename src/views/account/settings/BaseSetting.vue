@@ -70,14 +70,14 @@
 
 <script>
   import AvatarModal from './AvatarModal'
-  import {getAllUsers} from "@/api/userApi";
+  import {getCurrentUser} from "@/api/userApi";
 
   export default {
     components: {
       AvatarModal
     },
     created() {
-      getAllUsers();
+      getCurrentUser();
     },
     data() {
       return {

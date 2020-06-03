@@ -1,4 +1,4 @@
-import api from './index'
+import {api} from './index'
 import {axios} from '@/utils/request'
 
 /**
@@ -73,6 +73,15 @@ export function logout() {
   })
 }
 
+/**
+ * 获得当前的用户
+ */
+export function getCurrentUser() {
+  return axios({
+    url: api.GetCurrentUser,
+    method: 'get',
+  })
+}
 
 /**
  * 测试后台跨域处理的测试接口

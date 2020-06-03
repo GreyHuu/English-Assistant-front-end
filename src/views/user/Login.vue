@@ -114,7 +114,7 @@
   import {mapActions} from 'vuex'
   import {isSuccess, timeFix} from '@/utils/util'
   import {getSmsCaptcha} from '@/api/login'
-  import {compareCode, register} from "@/api/userApi";
+  import {compareCode} from "@/api/userApi";
   import Vue from "vue";
   import {SESSION_ID} from "@/store/mutation-types";
 
