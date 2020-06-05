@@ -4,7 +4,7 @@ import store from '@/store'
 import notification from 'ant-design-vue/es/notification'
 import {VueAxios} from './axios'
 import {ACCESS_TOKEN, SESSION_ID} from '@/store/mutation-types'
-
+import router from '@/router'
 // 创建 axios 实例
 const service = axios.create({
   withCredentials: true,  //允许cookie
@@ -29,9 +29,8 @@ const err = (error) => {
       })
       if (token) {
         store.dispatch('Logout').then(() => {
-          setTimeout(() => {
-            this.$router.push({path: "/user"})
-          }, 1500)
+          router.push({path: "/user"});
+          console.log("注销");
         })
       }
     }

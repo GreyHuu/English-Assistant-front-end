@@ -14,7 +14,9 @@ const api = {
 const reading = {
   GetAllReadingGroup: URL_PREFIX + "/reading/get-all-groups",
   SearchGroupsByTitle: URL_PREFIX + "/reading/search-title",
-  GetCurrentReadings: URL_PREFIX + "/reading/get-contents"
+  GetCurrentReadings: URL_PREFIX + "/reading/get-contents",
+  GetCurrentReadingQuestions: URL_PREFIX + "/reading/get-questions",
+  CompareGroupAnswers: URL_PREFIX + "/reading/compare-answers",
 }
 export {
   api,

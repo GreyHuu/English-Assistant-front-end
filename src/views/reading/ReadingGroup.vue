@@ -5,18 +5,13 @@
         <a-row :gutter="48">
           <a-col :md="8" :sm="24">
             <a-form-item label="题目组名称">
-              <a-input v-model="queryParam.id" placeholder="输入题目组名称"/>
+              <a-input v-model="queryParam" placeholder="输入题目组名称"/>
             </a-form-item>
           </a-col>
-          <a-col :md="8" :sm="24">
-            <a-form-item label="题目名称">
-              <a-input v-model="queryParam.id" placeholder="输入题目名称"/>
-            </a-form-item>
-          </a-col>
-          <a-col :md="8" :sm="24">
+          <a-col offset="12" :md="4" :sm="24">
             <span class="table-page-search-submitButtons">
-              <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
-              <a-button style="margin-left: 8px" @click="() => queryParam = {}">重置</a-button>
+              <a-button type="primary" @click="queryTitle">查询</a-button>
+              <a-button style="margin-left: 8px" @click="() => queryParam = ''">重置</a-button>
             </span>
           </a-col>
         </a-row>
@@ -25,7 +20,7 @@
 
     <a-table
       :columns="columns"
-      :row-key="record=>record.key"
+      :row-key="record=>record.id"
       :data-source="data"
       :loading="loading"
     >
@@ -61,7 +56,7 @@
       return {
         description: '您可以在此页面进行阅读题目组的概况浏览和选择',
         // 查询参数
-        queryParam: {},
+        queryParam: '',
         // 表头
         columns: [
           {
@@ -116,6 +111,7 @@
       // 获取组
       getAllGroup().then(res => {
         const {data} = res;
+        data.key = data.id;
         this.data = data;
         this.loading = false;
       })
@@ -133,6 +129,10 @@
       },
       // 删除该练习组
       confirmDelete(id) {
+
+      },
+      //模糊搜索题目组
+      queryTitle() {
 
       }
     }

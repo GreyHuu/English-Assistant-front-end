@@ -123,18 +123,19 @@ const user = {
 
     // 登出
     Logout({commit, state}) {
-      return new Promise((resolve) => {
+      const that = this;
+      return new Promise((resolve, reject) => {
         logout(state.token).then(() => {
-          resolve()
+          resolve();
         }).catch(() => {
-          resolve()
+          reject();
         }).finally(() => {
+          // 清楚本地ls
           commit('SET_TOKEN', '')
           commit('SET_ROLES', [])
           Vue.ls.remove(SESSION_ID);
           Vue.ls.remove(ACCESS_TOKEN);
           Vue.ls.remove(CURRENT_USER);
-
         })
       })
     }
