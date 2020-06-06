@@ -14,13 +14,39 @@ export function getAllGroup() {
 }
 
 /**
- * 根据组别id获得问题
+ * 根据组别id获得文章
  * @param parma
  * @returns {AxiosPromise}
  */
-export function getCurrentQuestions(parma) {
+export function getCurrentContents(parma) {
   return axios({
     url: reading.GetCurrentReadings,
+    method: 'post',
+    data: parma
+  })
+}
+
+/**
+ * 获得响应文章的问题
+ * @param parma
+ * @returns {AxiosPromise}
+ */
+export function getCurrentReadingQuestions(parma) {
+  return axios({
+    url: reading.GetCurrentReadingQuestions,
+    method: 'post',
+    data: parma
+  })
+}
+
+/**
+ * 比较答案
+ * @param parma
+ * @returns {AxiosPromise}
+ */
+export function compareGroupAnswers(parma) {
+  return axios({
+    url: reading.CompareGroupAnswers,
     method: 'post',
     data: parma
   })
