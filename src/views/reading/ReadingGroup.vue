@@ -56,7 +56,7 @@
       return {
         description: '您可以在此页面进行阅读题目组的概况浏览和选择',
         // 查询参数
-        queryParam: '',
+        queryParam: {},
         // 表头
         columns: [
           {

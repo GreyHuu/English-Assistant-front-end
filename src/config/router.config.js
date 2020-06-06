@@ -46,8 +46,8 @@ export const asyncRouterMap = [
       {
         path: '/words',
         name: "words",
-        component: RouteView,
         redirect: '/words/make_plan',
+        component: PageView,
         meta: {
           title: '单词背诵',
           icon: 'edit'
@@ -56,7 +56,7 @@ export const asyncRouterMap = [
           {
             path: '/words/make_plan',
             name: 'make_plan',
-            component: () => import('@/views/word/MakePlan'),
+            component: () => import('@/views/form/BasicForm'),
             meta: {
               title: '制定计划',
               keepAlive: true
@@ -65,7 +65,7 @@ export const asyncRouterMap = [
           {
             path: '/words/recite_words',
             name: 'recite_words',
-            component: () => import('@/views/word/ReciteWord'),
+            component: () => import('@/views/form/stepForm/StepForm'),
             meta: {
               title: '背诵单词',
               keepAlive: true
@@ -74,7 +74,7 @@ export const asyncRouterMap = [
           {
             path: '/words/review_new_words',
             name: 'review_new_words',
-            component: () => import('@/views/word/ReviewWord'),
+            component: () => import('@/views/form/advancedForm/AdvancedForm'),
             meta: {
               title: '生词复习',
               keepAlive: true
