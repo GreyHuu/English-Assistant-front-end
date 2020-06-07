@@ -8,9 +8,15 @@
 
   import Vue from "vue";
   import {ACCESS_TOKEN, CURRENT_USER} from "@/store/mutation-types";
+  import {getCurrentUser} from "@/api/userApi";
 
   export default {
     name: 'BlankLayout',
+    beforeMount() {
+      getCurrentUser().catch(e => {
+        console.log(e);
+      })
+    },
     data() {
       return {
         is_login: false

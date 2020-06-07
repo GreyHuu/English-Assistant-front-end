@@ -75,6 +75,7 @@
   import {asyncRouterMap} from '@/config/router.config.js'
   import Vue from "vue";
   import {ACCESS_TOKEN, CURRENT_USER} from "@/store/mutation-types";
+  import {getCurrentUser} from "@/api/userApi";
 
   export default {
     name: 'BasicLayout',
@@ -85,6 +86,11 @@
       GlobalHeader,
       GlobalFooter,
       SettingDrawer
+    },
+    beforeMount() {
+      getCurrentUser().catch(e => {
+        console.log(e);
+      })
     },
     data() {
       return {
