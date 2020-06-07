@@ -96,7 +96,7 @@ export const asyncRouterMap = [
           {
             path: '/writing/composition_bank',
             name: 'composition_bank',
-            component: () => import('@/views/list/TableList'),
+            component: () => import('@/views/writing/WritingBank'),
             meta: {
               title: '作文题库',
               keepAlive: true
@@ -105,12 +105,23 @@ export const asyncRouterMap = [
           {
             path: '/writing/my_composition',
             name: 'my_composition',
-            component: () => import('@/views/list/StandardList'),
+            component: () => import('@/views/writing/MyWriting'),
             meta: {
               title: '我的作文',
               keepAlive: true
             }
-          }]
+          },
+          {
+            path: '/writing/composition_bank/write',
+            name: 'write',
+            component: () => import('@/views/writing/Writing'),
+            hidden: true,
+            meta: {
+              title: '写作文',
+              keepAlive: true
+            }
+          }
+        ]
       },
 
       // 阅读理解

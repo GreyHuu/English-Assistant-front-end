@@ -18,7 +18,12 @@ const reading = {
   GetCurrentReadingQuestions: URL_PREFIX + "/reading/get-questions",
   CompareGroupAnswers: URL_PREFIX + "/reading/compare-answers",
 }
+
+const writing = {
+  GetAllCompositions: URL_PREFIX + "/writing/get-all-compositions"
+}
 export {
   api,
-  reading
+  reading,
+  writing
 }
