@@ -66,6 +66,10 @@ export function register(paramater) {
   })
 }
 
+/**
+ * 注销登录
+ * @returns {AxiosPromise}
+ */
 export function logout() {
   return axios({
     url: api.Logout,

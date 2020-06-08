@@ -51,3 +51,42 @@ export function compareGroupAnswers(parma) {
     data: parma
   })
 }
+
+/**
+ * 搜索题目组
+ * @param parma
+ * @returns {AxiosPromise}
+ */
+export function searchGroupByTitle(parma) {
+  return axios({
+    url: reading.SearchGroupsByTitle,
+    method: 'post',
+    data: parma
+  })
+}
+
+/**
+ * 删除题目组
+ * @param parma
+ * @returns {AxiosPromise}
+ */
+export function deleteGroupById(parma) {
+  return axios({
+    url: reading.DeleteGroup,
+    method: 'post',
+    data: parma
+  })
+}
+
+/**
+ * 插入历史记录
+ * @param parma
+ * @returns {AxiosPromise}
+ */
+export function insertHistory(parma) {
+  return axios({
+    url: reading.InsertHistory,
+    method: 'post',
+    data: parma
+  })
+}

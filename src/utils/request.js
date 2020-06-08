@@ -21,8 +21,15 @@ const err = (error) => {
         message: '禁止访问',
         description: data.message
       })
+      if (token) {
+        store.dispatch('Logout').then(() => {
+          router.push({path: "/user"});
+          console.log("注销");
+        })
+      }
     }
     if (error.response.status === 401 && !(data.result && data.result.isLogin)) {
+      notification.destroy();
       notification.error({
         message: '无访问权限',
         description: '请先登录，再进行访问'

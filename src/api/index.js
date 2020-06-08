@@ -17,6 +17,9 @@ const reading = {
   GetCurrentReadings: URL_PREFIX + "/reading/get-contents",
   GetCurrentReadingQuestions: URL_PREFIX + "/reading/get-questions",
   CompareGroupAnswers: URL_PREFIX + "/reading/compare-answers",
+  SearchGroup: URL_PREFIX + "/reading/search-title",
+  DeleteGroup: URL_PREFIX + "/reading/delete-group",
+  InsertHistory: URL_PREFIX + "/reading/insert-history",
 }
 
 const writing = {
