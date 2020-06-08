@@ -8,7 +8,6 @@
               <a-icon slot="prefix" type="search" />
             </a-input>
           </a-col>
-
           <a-col :md="8" :sm="24">
             <span>
               <a-button type="primary" @click="queryKeyword()">查询</a-button>
@@ -18,13 +17,9 @@
         </a-row>
       </a-form>
     </div>
-
-<!--    <div>{{listData.data}}</div>-->
-
     <div>
       <a-list  column="3" size="large" :pagination="pagination" :data-source="listData">
         <a-list-item slot="renderItem" slot-scope="item, index" >
-
           <span style="width: 200em">
              <b>【{{ item.cpt_title }}】</b><br>
             <b>要求：</b>{{item.cpt_direction}}
@@ -55,7 +50,6 @@
         },
       };
     },
-    //挂载vue实例后的钩子函数，钩子在主页挂载时执行一次，如果没有缓存的话，再次回到主页时，此函数还会执行
     mounted() {
       this.loading = true;
       // 保存题库信息
@@ -97,8 +91,6 @@
       //通过关键字进行模糊查询
       queryKeyword() {
         console.log('点击查询');
-
-
       }
     },
   };
