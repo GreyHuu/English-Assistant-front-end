@@ -12,11 +12,6 @@
 
   export default {
     name: 'BlankLayout',
-    beforeMount() {
-      getCurrentUser().catch(e => {
-        console.log(e);
-      })
-    },
     data() {
       return {
         is_login: false

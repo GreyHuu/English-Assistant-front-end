@@ -3,8 +3,13 @@
     <div class="content-box">
       <a-dropdown>
         <span class="action ant-dropdown-link user-dropdown-menu">
-          <a-avatar class="avatar" size="small" src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"/>
-          <span>nick name</span>
+          <a-avatar
+            shape="square"
+            size="large"
+            :style="{ backgroundColor: '#13C2C2', verticalAlign: 'middle' }"
+          >
+              {{ avatarValue }}
+        </a-avatar>
         </span>
         <a-menu slot="overlay" class="user-dropdown-menu-wrapper">
           <a-menu-item key="1">
@@ -29,6 +34,7 @@
 <script>
   import NoticeIcon from '@/components/NoticeIcon'
   import {mapActions, mapGetters} from 'vuex'
+  import {getCurrentUser} from "@/api/userApi";
 
   export default {
     name: 'UserMenu',
@@ -37,6 +43,19 @@
     },
     computed: {
       ...mapGetters(['nickname', 'avatar'])
+    },
+    mounted() {
+      setInterval(() => {
+        getCurrentUser().then(e => {
+          this.avatarValue = e.data.nick_name;
+        })
+      }, 10000);
+
+    },
+    data() {
+      return {
+        avatarValue: "田丰慧",
+      }
     },
     methods: {
       ...mapActions(['Logout']),
@@ -59,7 +78,7 @@
           onCancel() {
           }
         })
-      }
+      },
     }
   }
 </script>

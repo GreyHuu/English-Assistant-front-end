@@ -87,11 +87,6 @@
       GlobalFooter,
       SettingDrawer
     },
-    beforeMount() {
-      getCurrentUser().catch(e => {
-        console.log(e);
-      })
-    },
     data() {
       return {
         production: config.production,

@@ -10,6 +10,7 @@ const api = {
   SendSms: URL_PREFIX + '/phone/get-phone-code',
   CompareSms: URL_PREFIX + '/phone/compare-code',
   UserInfo: URL_PREFIX + '/users/get-current-user',
+  UpdateUser: URL_PREFIX + '/users/update-user',
 }
 const reading = {
   GetAllReadingGroup: URL_PREFIX + "/reading/get-all-groups",
