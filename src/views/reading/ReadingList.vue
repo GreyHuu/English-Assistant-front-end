@@ -18,7 +18,12 @@
       style="margin-top: 24px"
       title="阅读练习记录">
       <div slot="extra">
-        <a-input-search v-model="query" style="margin-left: 16px; width: 272px;" placeholder="输入题目组"/>
+        <a-input-search
+          v-model="query"
+          style="margin-left: 16px; width: 272px;"
+          placeholder="输入题目组名称"
+          @search="queryListData"
+        />
       </div>
 
       <a-list
@@ -60,7 +65,7 @@
                     title="是否确认删除该阅读记录?"
                     ok-text="确认"
                     cancel-text="取消"
-                    @confirm="redo(item)"
+                    @confirm="deleteList(item)"
                   >
                     <a>删除</a>
                   </a-popconfirm>
@@ -108,7 +113,7 @@
 <script>
   import HeadInfo from '@/components/tools/HeadInfo'
   import {DescriptionList} from '@/components'
-  import {getHistory, getHistoryData, searchGroupByTitle} from "@/api/readingApi";
+  import {getHistory, searchReadingListData, getHistoryData, deleteReadingList} from "@/api/readingApi";
   import {getCurrentUser} from "@/api/userApi";
   import moment from "moment";
 
@@ -145,9 +150,7 @@
         this.loading = true;
         const {id} = e.data;
         if (id) {
-          getHistoryData({
-            id
-          }).then(e => {
+          getHistoryData({id}).then(e => {
             const {times, during, score} = e.data;
             this.headData = {
               times: times.toString(),
@@ -158,20 +161,7 @@
           getHistory({
             id
           }).then(e => {
-              for (let da of e.data) {
-                const {list, group, time} = da;
-                this.data.push({
-                  group_id: list.group_id,
-                  title: group.title,
-                  description: group.description,
-                  score: list.score,
-                  during: this.handleDuringTimeToSecondAll(list.during_time),
-                  lastTime: moment(parseInt(time)).format("YYYY-MM-DD hh:mm:ss"),
-                  progress: {
-                    value: parseFloat(((list.score / group.full_mark) * 100).toFixed(2))
-                  }
-                })
-              }
+              this.reFlushData(e);
               this.loading = false;
             }
           )
@@ -180,6 +170,24 @@
       })
     },
     methods: {
+      reFlushData(e) {
+        this.data = []
+        for (let da of e.data) {
+          const {list, group, time} = da;
+          this.data.push({
+            id: list.id,
+            group_id: list.group_id,
+            title: group.title,
+            description: group.description,
+            score: list.score,
+            during: this.handleDuringTimeToSecondAll(list.during_time),
+            lastTime: moment(parseInt(time)).format("YYYY-MM-DD hh:mm:ss"),
+            progress: {
+              value: parseFloat(((list.score / group.full_mark) * 100).toFixed(2))
+            }
+          })
+        }
+      },
       //显现详细模态
       checkList(record) {
         this.visible = true;
@@ -210,6 +218,35 @@
           }
         )
       },
+      // 删除
+      deleteList(item) {
+        this.loading = true;
+        deleteReadingList({
+          id: item.id
+        }).then(res => {
+          getCurrentUser().then(e => {
+            this.loading = true;
+            const {id} = e.data;
+            if (id) {
+              getHistoryData({id}).then(e => {
+                const {times, during, score} = e.data;
+                this.headData = {
+                  times: times.toString(),
+                  during: this.handleDuringTimeToSecondAll(during).toString(),
+                  score: parseFloat(score).toFixed(2).toString()
+                }
+              })
+              getHistory({
+                id
+              }).then(e => {
+                  this.reFlushData(e);
+                  this.loading = false;
+                }
+              )
+            }
+          })
+        })
+      },
       // 将显示的时间转化为秒或者反向
       handleDuringTimeToSecondAll(second) {
         // 秒转化为显示
@@ -229,11 +266,19 @@
       },
       // 搜索
       queryListData() {
-        searchGroupByTitle({
-          title: this.query
-        }).then(e => {
-          console.log(e);
-        })
+        if (this.query) {
+          this.loading = true;
+          searchReadingListData({
+            title: this.query
+          }).then(e => {
+              this.reFlushData(e)
+              this.loading = false;
+            }
+          )
+        } else {
+          this.$message.warning('请输入要搜索的题目');
+        }
+
       }
     }
   }

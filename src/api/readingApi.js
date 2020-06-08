@@ -116,3 +116,30 @@ export function getHistoryData(parma) {
     data: parma
   })
 }
+
+/**
+ * 搜索题目组
+ * @param parma
+ * @returns {AxiosPromise}
+ * @constructor
+ */
+export function searchReadingListData(parma) {
+  return axios({
+    url: reading.SearchReadingListData,
+    method: 'post',
+    data: parma
+  })
+}
+
+/**
+ * 删除历史记录
+ * @param parma
+ * @returns {AxiosPromise}
+ */
+export function deleteReadingList(parma) {
+  return axios({
+    url: reading.DeleteReadingList,
+    method: 'post',
+    data: parma
+  })
+}

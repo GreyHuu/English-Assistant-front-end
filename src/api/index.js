@@ -22,7 +22,8 @@ const reading = {
   InsertHistory: URL_PREFIX + "/reading/insert-history",
   GetAllReadingList: URL_PREFIX + "/reading/get-all-reading-list",
   GetAllReadingListData: URL_PREFIX + "/reading/get-reading-list-data",
-  SearchReadingListData: URL_PREFIX + "/reading/search-list"
+  SearchReadingListData: URL_PREFIX + "/reading/search-list",
+  DeleteReadingList: URL_PREFIX + "/reading/delete-list",
 }
 
 const writing = {

@@ -243,6 +243,11 @@
             title: '提示',
             content: "是否确认提交答案? 每次练习答案只能提交才一次",
             onOk() {
+              that.$nextTick(function () {
+                console.log('this', this)
+                console.log('this.$refs.tInput', this.$refs.tInput)
+              })
+              that.$loading.show()
               compareGroupAnswers({
                 answers: that.questionAnswer
               }).then(res => {
@@ -261,6 +266,7 @@
                       path: "/reading/reading_groups/result",
                       query: {...e.data}
                     })
+                    that.$loading.hide()
                   })
                 })
               })
