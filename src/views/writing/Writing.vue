@@ -22,9 +22,8 @@
             提交
           </a-button>
           </a-popconfirm>
-
           <a-button type="primary" style="margin-left: 2em" @click="back" ghost>
-            取消
+            返回
           </a-button>
         </div>
 
@@ -33,7 +32,7 @@
             修改
           </a-button>
           <a-button type="primary" style="margin-left: 2em" @click="back" ghost>
-            返回
+            取消
           </a-button>
         </div>
       </div>
@@ -64,18 +63,20 @@
           cpt_word_count: 0,
           cpt_create_time: '',
           cpt_model: ''
+
         },
       }
     },
-    //组件被激活后的钩子函数，每次回到页面都会执行
-    activated() {
+    mounted() {
       this.current_state = this.$route.params.state,
       this.composition.cpt_id = this.$route.params.composition_bank_item.cpt_id;
-      this.composition.user_id = this.$route.params.user_id;
+      // this.composition.user_id = this.$route.params.user_id;
       this.cpt_title = this.$route.params.composition_bank_item.cpt_title;
       this.cpt_direction = this.$route.params.composition_bank_item.cpt_direction;
       this.composition.cpt_model = this.$route.params.composition_bank_item.cpt_model;
       this.cpt_reference = this.$route.params.composition_bank_item.cpt_reference;
+      // console.log('当前状态:'+this.current_state);
+      // console.log('cpt_id:'+this.composition.cpt_id);
       // console.log('1:'+this.composition.user_id);
       // console.log('2:'+this.cpt_title)
 
@@ -93,7 +94,8 @@
         this.composition.cpt_word_count = this.getWordCount(this.composition.my_cpt)
         let month = new Date().getMonth() + 1
         this.composition.cpt_create_time = new Date().getFullYear() + '-' + month + '-' + new Date().getDate()
-        console.log(this.composition)
+        // console.log(this.composition)
+
         AddCompositionAndCount({
           mycpt: this.composition,
           cpt_reference:  this.cpt_reference + 1

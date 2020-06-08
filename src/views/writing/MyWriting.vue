@@ -9,11 +9,11 @@
     >
     <span slot="operate" slot-scope="text, mycpt">
         <template>
-          <a @click="showItem(mycpt.id)">查看</a>
+          <a @click="showItem(mycpt.mycpt_id)">查看</a>
           <a-divider type="vertical"/>
-          <a @click="rewiteItem(mycpt.id)">修改</a>
+          <a @click="rewiteItem(mycpt.mycpt_id)">修改</a>
           <a-divider type="vertical"/>
-          <a @click="deleteItem(mycpt.id)">删除</a>
+          <a @click="deleteItem(mycpt.mycpt_id)">删除</a>
         </template>
     </span>
     </a-table>
@@ -22,115 +22,7 @@
 
 <script>
   import {STable} from '@/components'
-
-
-  const data = [
-    {
-      key: 1,
-      briefDIr: "【2017年6月六级真题】Motivation and Methods in Learning",
-      score: 85,
-      latelyTime: "2020-5-29 18:00",
-      times: 8
-    },
-    {
-      key: 2,
-      briefDIr: "【2017年6月六级真题】Motivation and Methods in Learning",
-      score: 85,
-      latelyTime: "2020-5-30 18:00",
-      times: 8
-    },
-    {
-      key: 3,
-      briefDIr: "【2017年6月六级真题】Motivation and Methods in Learning",
-      score: 85,
-      latelyTime: "2020-5-28 18:00",
-      times: 8
-    },
-    {
-      key: 4,
-      briefDIr: "【2017年6月六级真题】Motivation and Methods in Learning",
-      score: 85,
-      latelyTime: "2020-5-28 18:00",
-      times: 8
-    },
-    {
-      key: 5,
-      briefDIr: "【2017年6月六级真题】Motivation and Methods in Learning",
-      score: 85,
-      latelyTime: "2020-5-28 18:00",
-      times: 8
-    },
-    {
-      key: 6,
-      briefDIr: "【2017年6月六级真题】Motivation and Methods in Learning",
-      score: 85,
-      latelyTime: "2020-5-28 18:00",
-      times: 8
-    },
-    {
-      key: 7,
-      briefDIr: "【2017年6月六级真题】Motivation and Methods in Learning",
-      score: 85,
-      latelyTime: "2020-5-28 18:00",
-      times: 8
-    },
-    {
-      key: 8,
-      briefDIr: "【2017年6月六级真题】Motivation and Methods in Learning",
-      score: 85,
-      latelyTime: "2020-5-28 18:00",
-      times: 8
-    },
-    {
-      key: 9,
-      briefDIr: "【2017年6月六级真题】Motivation and Methods in Learning",
-      score: 85,
-      latelyTime: "2020-5-28 18:00",
-      times: 8
-    },
-    {
-      key: 10,
-      briefDIr: "【2017年6月六级真题】Motivation and Methods in Learning",
-      score: 85,
-      latelyTime: "2020-5-28 18:00",
-      times: 8
-    },
-    {
-      key: 11,
-      briefDIr: "【2017年6月六级真题】Motivation and Methods in Learning",
-      score: 85,
-      latelyTime: "2020-5-28 18:00",
-      times: 8
-    },
-    {
-      key: 12,
-      briefDIr: "【2017年6月六级真题】Motivation and Methods in Learning",
-      score: 85,
-      latelyTime: "2020-5-28 18:00",
-      times: 8
-    },
-    {
-      key: 13,
-      briefDIr: "【2017年6月六级真题】Motivation and Methods in Learning",
-      score: 85,
-      latelyTime: "2020-5-28 18:00",
-      times: 8
-    },
-    {
-      key: 14,
-      briefDIr: "【2017年6月六级真题】Motivation and Methods in Learning",
-      score: 85,
-      latelyTime: "2020-5-28 18:00",
-      times: 8
-    },
-    {
-      key: 15,
-      briefDIr: "【2017年6月六级真题】Motivation and Methods in Learning",
-      score: 85,
-      latelyTime: "2020-5-28 18:00",
-      times: 8
-    }
-  ];
+  import { getAllMyCompositions } from '@/api/writingApi'
 
   export default {
     name: 'MyWriting',
@@ -143,24 +35,24 @@
         columns: [
           {
             title: '题目',
-            dataIndex: 'briefDIr',
+            dataIndex: 'cpt_title',
             align: "center",
             width: '300px'
           },
           {
             title: '分数',
-            dataIndex: 'score',
+            dataIndex: 'mark',
             align: "center"
           },
           {
             title: '最近更新时间',
-            dataIndex: 'latelyTime',
+            dataIndex: 'mycpt_create_time',
             align: "center",/*
       defaultSortOrder: ['descend']/!*ascend 根据该列数据，对表格进行排序*!/*/
           },
           {
             title: '提交次数',
-            dataIndex: 'times',
+            dataIndex: 'submit_times',
             align: "center",
             customRender: (text) => text + ' 次'
           },
@@ -173,13 +65,19 @@
           }
         ],
         //数据
-        data,
+        data: [],
         //表格loading状态
         loading: false
       }
     },
-    //创建vue对象时，当html渲染之前就触发，只会触发一次
-    created() {
+    mounted() {
+      this.loading = true;
+      // 保存题库信息
+      getAllMyCompositions().then(res => {
+        // console.log(res.data)
+        this.data = res.data;
+        this.loading = false;
+      })
     },
     methods: {
       //查询作文详情

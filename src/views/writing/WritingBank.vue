@@ -19,8 +19,6 @@
       </a-form>
     </div>
 
-<!--    <div>{{listData.data}}</div>-->
-
     <div>
       <a-list  column="3" size="large" :pagination="pagination" :data-source="listData">
         <a-list-item slot="renderItem" slot-scope="item, index" >
@@ -42,6 +40,7 @@
   import {GetAllCompositions} from "@/api/writingApi";
 
   export default {
+    name: 'WritingBank',
     data() {
       return {
         // 查询参数
@@ -55,7 +54,6 @@
         },
       };
     },
-    //挂载vue实例后的钩子函数，钩子在主页挂载时执行一次，如果没有缓存的话，再次回到主页时，此函数还会执行
     mounted() {
       this.loading = true;
       // 保存题库信息
@@ -71,15 +69,9 @@
         // console.log('点击开始写作,index='+index);
         // console.log('点击开始写作,title='+this.listData[index].cpt_title);
         this.$router.push({
-          name: 'write',   //name+params      path+query
-          // path: '/writing/composition_bank/write',
-          //加上时间戳，以保证每次请求url不同，避免缓存带来的影响
-          // query: {
-          //   id: new Date().getTime()
-          // },
+          name: 'write',
           params: {
             state: 'write',
-            user_id: 19,
             composition_bank_item: {
               cpt_id: this.listData[index].cpt_id,
               cpt_title: this.listData[index].cpt_title,
