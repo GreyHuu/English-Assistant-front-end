@@ -2,9 +2,9 @@
   <a-card :bordered="false" style="margin: -24px -24px 0px;">
     <result type="success" :title="title">
       <template slot="action">
-        <a-button>返回重做</a-button>
-        <a-button style="margin-left: 8px">查看历史</a-button>
-        <a-button type="primary" style="margin-left: 8px">确定</a-button>
+        <a-button @click="goToReDo">返回重做</a-button>
+        <a-button style="margin-left: 8px" @click="goToReadingList">查看历史</a-button>
+        <a-button type="primary" style="margin-left: 8px" @click="goToReadingGroup">确定</a-button>
       </template>
       <div>
         <div style="font-size: 16px; color: rgba(0, 0, 0, 0.85); font-weight: 500; margin-bottom: 20px;">做题概况</div>
@@ -86,16 +86,34 @@
           }
         }
       },
+      //格式化时间
       handleTime() {
         return moment(parseInt(this.list.time)).format("YYYY-MM-DD hh:mm:ss");
+      },
+      //  确定按钮
+      goToReadingGroup() {
+        this.$router.push("/reading/reading_groups");
+      },
+      //  重做按钮按钮
+      goToReDo() {
+        this.$router.push({
+          path: "/reading/reading_groups/reading",
+          query: {
+            id: this.group.id
+          }
+        });
+      },
+      //  查看历史按钮
+      goToReadingList() {
+        this.$router.push("/reading/reading_lists");
       }
     },
     computed: {
       handleFullMark() {
-        return "'" + this.group.full_mark + "'";
+        return this.group.full_mark + '';
       },
       handleScore() {
-        return "'" + this.list.score + "'";
+        return this.list.score + '';
       },
     }
   }

@@ -3,13 +3,13 @@
     <a-card :bordered="false">
       <a-row>
         <a-col :sm="8" :xs="24">
-          <head-info title="我的练习次数" content="8次" :bordered="true"/>
+          <head-info title="我的练习次数" :content="headData.times" :bordered="true"/>
         </a-col>
         <a-col :sm="8" :xs="24">
-          <head-info title="每次练习平均时间" content="32:58" :bordered="true"/>
+          <head-info title="每次练习平均时间" :content="headData.during" :bordered="true"/>
         </a-col>
         <a-col :sm="8" :xs="24">
-          <head-info title="练习平均分" content="92.75"/>
+          <head-info title="练习平均分" :content="headData.score"/>
         </a-col>
       </a-row>
     </a-card>
@@ -18,18 +18,14 @@
       style="margin-top: 24px"
       title="阅读练习记录">
       <div slot="extra">
-        <a-radio-group v-model="status">
-          <a-radio-button value="all">全部</a-radio-button>
-          <a-radio-button value="week">一周内</a-radio-button>
-          <a-radio-button value="month">一个月内</a-radio-button>
-        </a-radio-group>
-        <a-input-search style="margin-left: 16px; width: 272px;" placeholder="输入题目组"/>
+        <a-input-search v-model="query" style="margin-left: 16px; width: 272px;" placeholder="输入题目组"/>
       </div>
 
       <a-list
         size="large"
         :pagination="{pageSize: 8}"
         :data-source="data"
+        :loading="loading"
       >
         <a-list-item :key="index" slot="renderItem" slot-scope="item, index">
           <a-list-item-meta>
@@ -37,11 +33,11 @@
           </a-list-item-meta>
           <div class="list-content">
             <div class="list-content-item">
-              <span>次数</span>
-              <p>{{ item.times }} 次</p>
+              <span>分数</span>
+              <p>{{ item.score }} 分</p>
             </div>
             <div class="list-content-item">
-              <span>上次做题时间</span>
+              <span>做题时间</span>
               <p>{{ item.lastTime }}</p>
             </div>
             <div class="list-content-item">
@@ -83,27 +79,26 @@
     <a-modal
       v-model="visible"
       title="记录详情">
-
       <template slot="footer">
         <a-button key="sure" type="primary" @click="cancelModal">
           确定
         </a-button>
-        <a-button key="redo" @click="redo">
+        <a-button key="redo" @click="redo(null)">
           重做
         </a-button>
       </template>
 
       <description-list :title="currentList.title" size="large" :col="two">
-        <description-list-item term="练习次数">
-          {{(currentList.times?currentList.times+"次":false)||"暂无信息"}}
+        <description-list-item term="练习用时">
+          {{(currentList.during?currentList.during:false)||"暂无信息"}}
         </description-list-item>
-        <description-list-item term="练习平均分">
+        <description-list-item term="练习分数">
           {{(currentList.score?currentList.score+"分":false)||"暂无信息"}}
         </description-list-item>
         <description-list-item term="练习正确率">
-          {{(currentList.process?(currentList.process.value+"%"):false)||"暂无信息"}}
+          {{(currentList.progress?(currentList.progress.value+"%"):false)||"暂无信息"}}
         </description-list-item>
-        <description-list-item term="上次练习时间">{{currentList.lastTime||"暂无信息"}}</description-list-item>
+        <description-list-item term="练习时间">{{currentList.lastTime||"暂无信息"}}</description-list-item>
         <description-list-item term="描述">{{currentList.description||"暂无信息"}}</description-list-item>
       </description-list>
     </a-modal>
@@ -113,127 +108,11 @@
 <script>
   import HeadInfo from '@/components/tools/HeadInfo'
   import {DescriptionList} from '@/components'
+  import {getHistory, getHistoryData, searchGroupByTitle} from "@/api/readingApi";
+  import {getCurrentUser} from "@/api/userApi";
+  import moment from "moment";
 
   const DescriptionListItem = DescriptionList.Item
-
-  const data = []
-  data.push({
-    title: '2006年考研阅读',
-    description: '2006年的考研阅读，难度偏难',
-    times: '5',
-    lastTime: '2018-07-26 22:44',
-    progress: {
-      value: 90
-    }
-  })
-  data.push({
-    title: '2006年考研阅读',
-    description: '2006年的考研阅读，难度偏难',
-    times: '5',
-    lastTime: '2018-07-26 22:44',
-    progress: {
-      value: 90
-    }
-  })
-  data.push({
-    title: '2006年考研阅读',
-    description: '2006年的考研阅读，难度偏难',
-    times: '5',
-    lastTime: '2018-07-26 22:44',
-    progress: {
-      value: 90
-    }
-  })
-  data.push({
-    title: '2006年考研阅读',
-    description: '2006年的考研阅读，难度偏难',
-    times: '5',
-    lastTime: '2018-07-26 22:44',
-    progress: {
-      value: 90
-    }
-  })
-  data.push({
-    title: '2006年考研阅读',
-    description: '2006年的考研阅读，难度偏难',
-    times: '5',
-    lastTime: '2018-07-26 22:44',
-    progress: {
-      value: 90
-    }
-  })
-  data.push({
-    title: '2006年考研阅读',
-    description: '2006年的考研阅读，难度偏难',
-    times: '5',
-    lastTime: '2018-07-26 22:44',
-    progress: {
-      value: 90
-    }
-  })
-  data.push({
-    title: '2006年考研阅读',
-    description: '2006年的考研阅读，难度偏难',
-    times: '5',
-    lastTime: '2018-07-26 22:44',
-    progress: {
-      value: 90
-    }
-  })
-  data.push({
-    title: '2006年考研阅读',
-    description: '2006年的考研阅读，难度偏难',
-    times: '5',
-    lastTime: '2018-07-26 22:44',
-    progress: {
-      value: 90
-    }
-  })
-  data.push({
-    title: '2006年考研阅读',
-    description: '2006年的考研阅读，难度偏难',
-    times: '5',
-    lastTime: '2018-07-26 22:44',
-    progress: {
-      value: 90
-    }
-  })
-  data.push({
-    title: '2006年考研阅读',
-    description: '2006年的考研阅读，难度偏难',
-    times: '5',
-    lastTime: '2018-07-26 22:44',
-    progress: {
-      value: 90
-    }
-  })
-  data.push({
-    title: '2006年考研阅读',
-    description: '2006年的考研阅读，难度偏难',
-    times: '5',
-    lastTime: '2018-07-26 22:44',
-    progress: {
-      value: 90
-    }
-  })
-  data.push({
-    title: '2006年考研阅读',
-    description: '2006年的考研阅读，难度偏难',
-    times: '5',
-    lastTime: '2018-07-26 22:44',
-    progress: {
-      value: 90
-    }
-  })
-  data.push({
-    title: '2006年考研阅读',
-    description: '2006年的考研阅读，难度偏难',
-    times: '5',
-    lastTime: '2018-07-26 22:44',
-    progress: {
-      value: 90
-    }
-  })
 
   export default {
     name: 'ReadingList',
@@ -245,43 +124,116 @@
     data() {
       return {
         description: "在此处您可以对您做过的阅读练习进行历史记录的查询",
-        data,
-        // 时间范围按钮
-        status: 'all',
+        data: [],
         //  查看详情的模态
         visible: false,
         // 当前选中的记录
         currentList: "",
         //  详细记录里面的列数
-        two: 2
+        two: 2,
+        loading: false,
+        headData: {
+          times: "",
+          during: "",
+          score: ""
+        },
+        query: ""
       }
+    },
+    mounted() {
+      getCurrentUser().then(e => {
+        this.loading = true;
+        const {id} = e.data;
+        if (id) {
+          getHistoryData({
+            id
+          }).then(e => {
+            const {times, during, score} = e.data;
+            this.headData = {
+              times: times.toString(),
+              during: this.handleDuringTimeToSecondAll(during).toString(),
+              score: parseFloat(score).toFixed(2).toString()
+            }
+          })
+          getHistory({
+            id
+          }).then(e => {
+              for (let da of e.data) {
+                const {list, group, time} = da;
+                this.data.push({
+                  group_id: list.group_id,
+                  title: group.title,
+                  description: group.description,
+                  score: list.score,
+                  during: this.handleDuringTimeToSecondAll(list.during_time),
+                  lastTime: moment(parseInt(time)).format("YYYY-MM-DD hh:mm:ss"),
+                  progress: {
+                    value: parseFloat(((list.score / group.full_mark) * 100).toFixed(2))
+                  }
+                })
+              }
+              this.loading = false;
+            }
+          )
+        }
+
+      })
     },
     methods: {
       //显现详细模态
       checkList(record) {
         this.visible = true;
         this.currentList = record;
-      },
+      }
+      ,
       // 取消详细模态
       cancelModal() {
         this.visible = false;
         this.currentList = "";
-      },
+      }
+      ,
       // 重做
       redo(item) {
         let id;
+        console.log(item);
         if (item) {
-          id = item.id;
+          id = item.group_id;
         } else {
-          id = this.currentList.id;
+          id = this.currentList.group_id;
         }
+        console.log(id);
         this.$router.push({
             path: "/reading/reading_groups/reading",
             query: {
-              id: id
+              id
             }
           }
         )
+      },
+      // 将显示的时间转化为秒或者反向
+      handleDuringTimeToSecondAll(second) {
+        // 秒转化为显示
+        if (second) {
+          let min = parseInt(second / 60).toString();
+          let se = (second % 60).toString();
+          if (min <= 99) {
+            if (min.length < 2) {
+              min = "0" + min;
+            }
+            if (se.length < 2) {
+              se = "0" + se;
+            }
+            return min + ":" + se;
+          }
+        }
+      },
+      // 搜索
+      queryListData() {
+        searchGroupByTitle({
+          title: this.query
+        }).then(e => {
+          console.log(e);
+        })
       }
     }
   }
