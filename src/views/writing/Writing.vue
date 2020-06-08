@@ -60,7 +60,6 @@
         //我的作文Item
         composition: {
           cpt_id: -1,
-          user_id: -1,
           my_cpt: '',
           cpt_word_count: 0,
           cpt_create_time: '',
@@ -100,7 +99,13 @@
           cpt_reference:  this.cpt_reference + 1
         }).then( res=>{
           if(res.data.success) {
-            console.log('服务器返回：添加成功')
+            console.log('服务器返回：添加成功');
+            this.$notification.open({
+              message: '操作成功',
+              description:
+                '成功提交添加一篇作文，可在【我的作文】中查看',
+              icon: <a-icon type="smile" style="color: #108ee9" />,
+            });
           } else {
             console.log('服务器返回：添加失败或发生错误')
           }

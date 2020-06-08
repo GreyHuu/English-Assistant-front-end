@@ -20,11 +20,11 @@ export function GetAllCompositions() {
 export function AddCompositionAndCount(params) {
   console.log(params)
   return axios({
-    url: writing.AddCompositionAndCount,
+    url: writing.AddCompositionAndCount+'/'+params.cpt_reference,
     headers:{
       'Content-type': 'application/json'
     },
     method: 'post',
-    data: params
+    data: params.mycpt
   })
 }
