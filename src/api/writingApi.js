@@ -12,3 +12,19 @@ export function GetAllCompositions() {
     method: 'get',
   })
 }
+
+/**
+ * 获得题库的所有题目
+ * @returns {AxiosPromise}
+ */
+export function AddCompositionAndCount(params) {
+  console.log(params)
+  return axios({
+    url: writing.AddCompositionAndCount+'/'+params.cpt_reference,
+    headers:{
+      'Content-type': 'application/json'
+    },
+    method: 'post',
+    data: params.mycpt
+  })
+}

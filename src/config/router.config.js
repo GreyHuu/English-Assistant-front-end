@@ -89,7 +89,7 @@ export const asyncRouterMap = [
         component: PageView,
         redirect: '/writing/composition_bank',
         meta: {
-          title: '作文练习',
+          title: '写作练习',
           icon: 'snippets'
         },
         children: [

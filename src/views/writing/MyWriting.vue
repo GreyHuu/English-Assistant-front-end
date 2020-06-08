@@ -178,6 +178,7 @@
         loading: false
       }
     },
+    //创建vue对象时，当html渲染之前就触发，只会触发一次
     created() {
     },
     methods: {
