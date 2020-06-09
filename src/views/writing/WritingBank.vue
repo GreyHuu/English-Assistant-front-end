@@ -34,7 +34,7 @@
 </template>
 
 <script>
-  import { GetAllCompositions, getAllMyCompositions } from '@/api/writingApi'
+  import { getAllCompositions } from '@/api/writingApi'
 
   export default {
     name: 'WritingBank',
@@ -58,7 +58,7 @@
       reLoad() {
         this.loading = true;
         // 保存题库信息
-        GetAllCompositions().then(res => {
+        getAllCompositions().then(res => {
           // console.log(res.data)
           this.listData = res.data;
           this.loading = false;

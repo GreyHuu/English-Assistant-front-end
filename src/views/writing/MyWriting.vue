@@ -9,17 +9,18 @@
     >
     <span slot="operate" slot-scope="text, mycpt">
         <template>
-<<<<<<< HEAD
           <a @click="viewItem(mycpt.mycpt_id)">查看</a>
           <a-divider type="vertical"/>
           <a @click="rewriteItem(mycpt.mycpt_id)">修改</a>
-=======
-          <a @click="showItem(mycpt.mycpt_id)">查看</a>
           <a-divider type="vertical"/>
-          <a @click="rewiteItem(mycpt.mycpt_id)">修改</a>
->>>>>>> 7611c86bdccfc8eed25b7fc82f29a992e9e5bedb
-          <a-divider type="vertical"/>
-          <a @click="deleteItem(mycpt.mycpt_id)">删除</a>
+          <a-popconfirm
+          title="是否确认删除这篇作文"
+          ok-text="确认"
+          cancel-text="取消"
+          @confirm="deleteItem(mycpt.mycpt_id)"
+          @cancel="cancel">
+            <a >删除</a>
+          </a-popconfirm>
         </template>
     </span>
     </a-table>
@@ -97,12 +98,13 @@
       },
       //查询作文详情
       viewItem(mycpt_id) {
-        console.log('查看作文')
+        // console.log('查看作文')
+        console.log('mycpt_id='+mycpt_id)
         this.$router.push({
             name: "write",
             params: {
               state: 'view',
-              mycpt_id,
+              mycpt_id: mycpt_id,
             }
           })
       },
@@ -113,15 +115,13 @@
           name: "write",
           params: {
             state: 'rewrite',
-            composition_bank_item: {
-              cpt_id: this.listData[index].cpt_id,
-              cpt_title: this.listData[index].cpt_title,
-              cpt_direction: this.listData[index].cpt_direction,
-              cpt_model: this.listData[index].cpt_model,
-              cpt_reference: this.listData[index].cpt_reference
-            }
+            mycpt_id: mycpt_id,
           }
         })
+      },
+
+      cancel(e) {
+        this.$message.error('取消删除');
       },
       // 删除作文
       deleteItem(mycpt_id) {

@@ -2,22 +2,20 @@
   <div io="app">
     <a-card>
       <div>
-        <h2 style="text-align: center">【{{cpt_title}}】</h2>
+        <h2 style="text-align: center">【{{composition.cpt_title}}】</h2>
 
-        <span><b>要求：</b>{{cpt_direction}}</span>
+        <span><b>要求：</b>{{composition.cpt_direction}}</span>
 
       </div>
       <div style="margin-top: 2em;">
         <b>在下方写入正文:</b>
         <a-textarea placeholder="输入正文..." :rows="20" v-model:value="composition.mycpt" :readOnly="isView"/>
         <div style="margin-left: 69em;margin-top: 1em" v-if="isWrite">
-          <a-popconfirm
-            title="Are you sure delete this task?"
-            ok-text="Yes"
-            cancel-text="No"
-            @confirm="write"
-            @cancel="cancel"
-          >
+          <a-popconfirm title="是否确认提交作文?"
+                        ok-text="确认"
+                        cancel-text="取消"
+                        @confirm="write(composition.mycpt_id, composition.mycpt)"
+                        @cancel="cancel">
             <a-button type="primary" ghost>
               提交
             </a-button>
@@ -27,13 +25,28 @@
           </a-button>
         </div>
 
-        <div style="margin-left: 69em;margin-top: 1em" v-else>
+        <div style="margin-left: 59em;margin-top: 1em" v-else>
           <a-button type="primary" @click="viewModel" ghost>
             查看范文
           </a-button>
-          <a-button type="primary" @click="rewrite()" ghost>
-            修改
-          </a-button>
+          <a-popconfirm title="是否修改?"
+                        ok-text="是"
+                        cancel-text="否"
+                        @confirm="writeable"
+                        @cancel="">
+            <a-button type="primary" style="margin-left: 2em" ghost v-if="isView">
+              修改
+            </a-button>
+          </a-popconfirm>
+          <a-popconfirm title="是否确认提交修改后的作文?"
+                        ok-text="确认"
+                        cancel-text="取消"
+                        @confirm="rewrite(composition.mycpt_id, composition.mycpt)"
+                        @cancel="cancel">
+            <a-button type="primary" style="margin-left: 2em" ghost v-if="isRewrite">
+              提交修改
+            </a-button>
+          </a-popconfirm>
           <a-button type="primary" style="margin-left: 2em" @click="back" ghost>
             取消
           </a-button>
@@ -44,14 +57,12 @@
 </template>
 
 <script>
-  import { AddCompositionAndCount} from '@/api/writingApi'
+  import { addCompositionAndCount, getAnExistingComposition, updateMyComposition} from '@/api/writingApi'
 
   export default {
     name: 'Writing',
     data() {
       return {
-        cpt_title: '',
-        cpt_direction: '',
         cpt_reference: -1,
 
         //跳转到本页面应传的参数   write:开始写作，  rewrite:修改作文,   view：查看作文
@@ -61,47 +72,76 @@
         isView: false,
         //我的作文Item
         composition: {
+          mycpt_id: -1,
           cpt_id: -1,
           mycpt: '',
-          cpt_word_count: 0,
           cpt_create_time: '',
-          cpt_model: ''
+          cpt_word_count: -1,
+          submit_times: -1,
 
+          cpt_title: '',
+          cpt_direction: '',
+          cpt_model: '',
         },
       }
     },
     mounted() {
       this.current_state = this.$route.params.state;
+      console.log('current_state: '+this.current_state);
       //开始写作
       if(this.current_state == 'write'){
         this.isWrite = true;
 
         this.composition.cpt_id = this.$route.params.composition_bank_item.cpt_id;
-        this.cpt_title = this.$route.params.composition_bank_item.cpt_title;
-        this.cpt_direction = this.$route.params.composition_bank_item.cpt_direction;
+        this.composition.cpt_title = this.$route.params.composition_bank_item.cpt_title;
+        this.composition.cpt_direction = this.$route.params.composition_bank_item.cpt_direction;
         this.cpt_reference = this.$route.params.composition_bank_item.cpt_reference;
-      } else if(this.current_state == 'reWrite')      //修改
+
+      } else if(this.current_state == 'rewrite') {      //修改
         this.isRewrite = true;
-      else if(this.current_state == 'view')       //查看
+        this.composition.mycpt_id = this.$route.params.mycpt_id;
+        this.reload(this.$route.params.mycpt_id);
+      }
+      else if(this.current_state == 'view') { //查看
         this.isView = true;
+        this.composition.mycpt_id = this.$route.params.mycpt_id;
+        this.reload(this.$route.params.mycpt_id);
+      }
     },
     methods: {
-      reload() {
-
+      reload(mycpt_id) {
+        getAnExistingComposition({
+          mycpt_id
+        }).then(res => {
+          if(res.message == 'success') {
+            // console.log('查看传来的参数(Json)：'+JSON.stringify(res.data));
+            this.composition.cpt_id = res.data.cpt_id;
+            this.composition.mycpt = res.data.mycpt;
+            this.composition.cpt_create_time = res.data.cpt_create_time;
+            this.composition.cpt_word_count = res.data.cpt_word_count;
+            this.composition.submit_times = res.data.submit_times;
+            this.composition.cpt_title = res.data.cpt_title;
+            this.composition.cpt_direction = res.data.cpt_direction;
+            this.composition.cpt_model = res.data.cpt_model;
+          }else {
+            console.log('服务器返回：添加失败或发生错误');
+            this.$notification.fail({
+              message: '请求失败',
+              description: '退回到上一页',
+              duration: null
+            });
+            this.$router.go(-1)
+          }
+        })
       },
 
-      write(e) {
-        // this.composition.my_cpt =
-        //字数统计
-        this.composition.cpt_word_count = this.getWordCount(this.composition.my_cpt)
-        let month = new Date().getMonth() + 1
-        this.composition.cpt_create_time = new Date().getFullYear() + '-' + month + '-' + new Date().getDate()
-        // console.log(this.composition)
-
-        AddCompositionAndCount({
+      write(mycpt) {
+        addCompositionAndCount({
           cpt_reference: this.cpt_reference + 1,
           cpt_id: this.composition.cpt_id,
-          params: { mycpt },
+          params: {
+            mycpt
+          },
         }).then(res => {
           // console.log('添加'+JSON.stringify(res));
           if (res.message == '添加成功') {
@@ -134,11 +174,32 @@
 
       },
 
-      rewrite() {
-        // this.isWrite= false;
-        // this.isRewrite= true;
-        // this.isView= false;
-        console.log(this.current_state)
+      writeable() {
+        this.isView = false;
+        this.isRewrite = true;
+      },
+      //修改作文
+      rewrite(mycpt_id, mycpt) {
+        updateMyComposition({
+          mycpt_id, mycpt
+          // params: {
+          //
+          // },
+        }).then(res => {
+          if (res.message == '修改成功') {
+            this.$notification.success({
+              message: '操作成功',
+              description: '成功修改并提交本作文',
+            });
+          } else {
+            this.$notification.fail({
+              message: '提交失败',
+              description: '当前提交失败',
+              duration: null
+            })
+          }
+          this.reload(mycpt_id)
+        })
       },
 
     }
