@@ -18,11 +18,10 @@ export function GetAllCompositions() {
  * @returns {AxiosPromise}
  */
 export function AddCompositionAndCount(params) {
-  console.log(params)
   return axios({
-    url: writing.AddCompositionAndCount+'/'+params.cpt_reference,
+    url: writing.AddCompositionAndCount+'/'+params.cpt_id+'/'+params.cpt_reference,
     method: 'post',
-    data: params.mycpt
+    data: params.params
   })
 }
 
@@ -44,7 +43,7 @@ export function getAllMyCompositions() {
  */
 export function deleteMyCompositionById(params) {
   return axios({
-    url: writing.getAllMyCompositions,
+    url: writing.deleteMyCompositionById,
     method: 'post',
     data: params
   })

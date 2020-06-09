@@ -9,7 +9,7 @@
       </div>
       <div style="margin-top: 2em;">
         <b>在下方写入正文:</b>
-        <a-textarea placeholder="输入正文..." :rows="20" v-model:value="composition.my_cpt" :readOnly="isView"/>
+        <a-textarea placeholder="输入正文..." :rows="20" v-model:value="composition.mycpt" :readOnly="isView"/>
         <div style="margin-left: 69em;margin-top: 1em" v-if="isWrite">
           <a-popconfirm
             title="Are you sure delete this task?"
@@ -18,18 +18,21 @@
             @confirm="write"
             @cancel="cancel"
           >
-          <a-button type="primary" ghost>
-            提交
-          </a-button>
+            <a-button type="primary" ghost>
+              提交
+            </a-button>
           </a-popconfirm>
 
           <a-button type="primary" style="margin-left: 2em" @click="back" ghost>
-            取消
+            返回
           </a-button>
         </div>
 
         <div style="margin-left: 69em;margin-top: 1em" v-else>
-          <a-button type="primary" @click="rewrite" ghost>
+          <a-button type="primary" @click="viewModel" ghost>
+            查看范文
+          </a-button>
+          <a-button type="primary" @click="rewrite()" ghost>
             修改
           </a-button>
           <a-button type="primary" style="margin-left: 2em" @click="back" ghost>
@@ -42,7 +45,7 @@
 </template>
 
 <script>
-  import {AddCompositionAndCount} from "@/api/writingApi";
+  import { AddCompositionAndCount} from '@/api/writingApi'
 
   export default {
     name: 'Writing',
@@ -60,63 +63,71 @@
         //我的作文Item
         composition: {
           cpt_id: -1,
-          my_cpt: '',
+          mycpt: '',
           cpt_word_count: 0,
           cpt_create_time: '',
-          cpt_model: ''
         },
       }
     },
-    //组件被激活后的钩子函数，每次回到页面都会执行
-    activated() {
-      this.current_state = this.$route.params.state,
-      this.composition.cpt_id = this.$route.params.composition_bank_item.cpt_id;
-      this.composition.user_id = this.$route.params.user_id;
-      this.cpt_title = this.$route.params.composition_bank_item.cpt_title;
-      this.cpt_direction = this.$route.params.composition_bank_item.cpt_direction;
-      this.composition.cpt_model = this.$route.params.composition_bank_item.cpt_model;
-      this.cpt_reference = this.$route.params.composition_bank_item.cpt_reference;
-      // console.log('1:'+this.composition.user_id);
-      // console.log('2:'+this.cpt_title)
-
+    mounted() {
+      this.current_state = this.$route.params.state;
+      //开始写作
       if(this.current_state == 'write'){
         this.isWrite = true;
-      } else if(this.current_state == 'reWrite')
+
+        this.composition.cpt_id = this.$route.params.composition_bank_item.cpt_id;
+        this.cpt_title = this.$route.params.composition_bank_item.cpt_title;
+        this.cpt_direction = this.$route.params.composition_bank_item.cpt_direction;
+        this.cpt_reference = this.$route.params.composition_bank_item.cpt_reference;
+      } else if(this.current_state == 'reWrite')      //修改
         this.isRewrite = true;
-      else if(this.current_state == 'view')
+      else if(this.current_state == 'view')       //查看
         this.isView = true;
     },
     methods: {
+      reload() {
+
+      },
+
       write(e) {
-        // this.composition.my_cpt =
-        //字数统计
-        this.composition.cpt_word_count = this.getWordCount(this.composition.my_cpt)
-        let month = new Date().getMonth() + 1
-        this.composition.cpt_create_time = new Date().getFullYear() + '-' + month + '-' + new Date().getDate()
+        const mycpt = this.composition.mycpt;
         console.log(this.composition)
         AddCompositionAndCount({
-          mycpt: this.composition,
-          cpt_reference:  this.cpt_reference + 1
-        }).then( res=>{
-          if(res.data.success) {
+          cpt_reference: this.cpt_reference + 1,
+          cpt_id: this.composition.cpt_id,
+          params: { mycpt },
+        }).then(res => {
+          // console.log('添加'+JSON.stringify(res));
+          if (res.message == '添加成功') {
             console.log('服务器返回：添加成功');
-            this.$notification.open({
+            this.$notification.success({
               message: '操作成功',
-              description:
-                '成功提交添加一篇作文，可在【我的作文】中查看',
-              icon: <a-icon type="smile" style="color: #108ee9" />,
+              description: '成功提交一篇作文，可在【我的作文】中查看',
+              duration: null,
             });
           } else {
             console.log('服务器返回：添加失败或发生错误')
+            this.$notification.fail({
+              message: '提交失败',
+              description: '当前提交失败',
+              duration: null
+            })
           }
         })
       },
+
       cancel(e) {
         this.$message.error('取消提交');
       },
+
       back() {
         this.$router.go(-1)
       },
+
+      viewModel() {
+
+      },
+
       rewrite() {
         // this.isWrite= false;
         // this.isRewrite= true;
@@ -124,10 +135,6 @@
         console.log(this.current_state)
       },
 
-      //统计作文字数
-      getWordCount(cpt){
-        return cpt.split(" ").length;
-      }
     }
   }
 </script>

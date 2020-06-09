@@ -24,10 +24,11 @@ const reading = {
 
 const writing = {
   GetAllCompositions: URL_PREFIX + "/writing/get-all-compositions",
-  AddCompositionAndCount: URL_PREFIX + "/writing/add-a-composition-and-count/{cpt_reference}",
+  AddCompositionAndCount: URL_PREFIX + "/writing/add-a-composition-and-count",
   getAllMyCompositions: URL_PREFIX + "/writing/get-all-my-compositions",
-  deleteMyCompositionById:"/writing/delete-my-composition"
+  deleteMyCompositionById: URL_PREFIX + "/writing/delete-my-composition"
 }
+
 export {
   api,
   reading,

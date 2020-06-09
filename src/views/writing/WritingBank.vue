@@ -34,7 +34,7 @@
 </template>
 
 <script>
-  import {GetAllCompositions} from "@/api/writingApi";
+  import { GetAllCompositions, getAllMyCompositions } from '@/api/writingApi'
 
   export default {
     data() {
@@ -51,29 +51,26 @@
       };
     },
     mounted() {
-      this.loading = true;
-      // 保存题库信息
-      GetAllCompositions().then(res => {
-        // console.log(res.data)
-        this.listData = res.data;
-        this.loading = false;
-      })
+      this.reLoad();
     },
     methods: {
+      reLoad() {
+        this.loading = true;
+        // 保存题库信息
+        GetAllCompositions().then(res => {
+          // console.log(res.data)
+          this.listData = res.data;
+          this.loading = false;
+        })
+      },
       //点击开始写作
       write(index) {
         // console.log('点击开始写作,index='+index);
         // console.log('点击开始写作,title='+this.listData[index].cpt_title);
         this.$router.push({
-          name: 'write',   //name+params      path+query
-          // path: '/writing/composition_bank/write',
-          //加上时间戳，以保证每次请求url不同，避免缓存带来的影响
-          // query: {
-          //   id: new Date().getTime()
-          // },
+          name: 'write',
           params: {
             state: 'write',
-            user_id: 19,
             composition_bank_item: {
               cpt_id: this.listData[index].cpt_id,
               cpt_title: this.listData[index].cpt_title,
