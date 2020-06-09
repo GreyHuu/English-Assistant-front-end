@@ -20,6 +20,9 @@ const reading = {
   SearchGroup: URL_PREFIX + "/reading/search-title",
   DeleteGroup: URL_PREFIX + "/reading/delete-group",
   InsertHistory: URL_PREFIX + "/reading/insert-history",
+  GetAllReadingList: URL_PREFIX + "/reading/get-all-reading-list",
+  GetAllReadingListData: URL_PREFIX + "/reading/get-reading-list-data",
+  SearchReadingListData: URL_PREFIX + "/reading/search-list"
 }
 
 const writing = {

@@ -90,3 +90,29 @@ export function insertHistory(parma) {
     data: parma
   })
 }
+
+/**
+ * 获得用户的历史记录
+ * @param parma
+ * @returns {AxiosPromise}
+ */
+export function getHistory(parma) {
+  return axios({
+    url: reading.GetAllReadingList,
+    method: 'post',
+    data: parma
+  })
+}
+
+/**
+ * 获得list 的分析
+ * @param parma
+ * @returns {AxiosPromise}
+ */
+export function getHistoryData(parma) {
+  return axios({
+    url: reading.GetAllReadingListData,
+    method: 'post',
+    data: parma
+  })
+}

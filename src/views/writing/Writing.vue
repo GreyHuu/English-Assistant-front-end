@@ -22,7 +22,6 @@
               提交
             </a-button>
           </a-popconfirm>
-
           <a-button type="primary" style="margin-left: 2em" @click="back" ghost>
             返回
           </a-button>
@@ -36,7 +35,7 @@
             修改
           </a-button>
           <a-button type="primary" style="margin-left: 2em" @click="back" ghost>
-            返回
+            取消
           </a-button>
         </div>
       </div>
@@ -66,6 +65,8 @@
           mycpt: '',
           cpt_word_count: 0,
           cpt_create_time: '',
+          cpt_model: ''
+
         },
       }
     },
@@ -90,8 +91,13 @@
       },
 
       write(e) {
-        const mycpt = this.composition.mycpt;
-        console.log(this.composition)
+        // this.composition.my_cpt =
+        //字数统计
+        this.composition.cpt_word_count = this.getWordCount(this.composition.my_cpt)
+        let month = new Date().getMonth() + 1
+        this.composition.cpt_create_time = new Date().getFullYear() + '-' + month + '-' + new Date().getDate()
+        // console.log(this.composition)
+
         AddCompositionAndCount({
           cpt_reference: this.cpt_reference + 1,
           cpt_id: this.composition.cpt_id,

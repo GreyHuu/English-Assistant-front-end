@@ -9,9 +9,15 @@
     >
     <span slot="operate" slot-scope="text, mycpt">
         <template>
+<<<<<<< HEAD
           <a @click="viewItem(mycpt.mycpt_id)">查看</a>
           <a-divider type="vertical"/>
           <a @click="rewriteItem(mycpt.mycpt_id)">修改</a>
+=======
+          <a @click="showItem(mycpt.mycpt_id)">查看</a>
+          <a-divider type="vertical"/>
+          <a @click="rewiteItem(mycpt.mycpt_id)">修改</a>
+>>>>>>> 7611c86bdccfc8eed25b7fc82f29a992e9e5bedb
           <a-divider type="vertical"/>
           <a @click="deleteItem(mycpt.mycpt_id)">删除</a>
         </template>

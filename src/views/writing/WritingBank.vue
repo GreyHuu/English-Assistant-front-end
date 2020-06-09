@@ -37,6 +37,7 @@
   import { GetAllCompositions, getAllMyCompositions } from '@/api/writingApi'
 
   export default {
+    name: 'WritingBank',
     data() {
       return {
         // 查询参数

@@ -19,7 +19,7 @@ export function GetAllCompositions() {
  */
 export function AddCompositionAndCount(params) {
   return axios({
-    url: writing.AddCompositionAndCount+'/'+params.cpt_id+'/'+params.cpt_reference,
+    url: writing.AddCompositionAndCount+'/'+params.cpt_reference,
     method: 'post',
     data: params.params
   })
@@ -46,5 +46,16 @@ export function deleteMyCompositionById(params) {
     url: writing.deleteMyCompositionById,
     method: 'post',
     data: params
+  })
+}
+
+/**
+ * 获取我的所有作文
+ * @returns {AxiosPromise}
+ */
+export function getAllMyCompositions() {
+  return axios({
+    url: writing.getAllMyCompositions,
+    method: 'get',
   })
 }
