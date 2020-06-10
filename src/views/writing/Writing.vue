@@ -21,7 +21,7 @@
             </a-button>
           </a-popconfirm>
           <a-button type="primary" style="margin-left: 2em" @click="back" ghost>
-            返回
+            返回题库
           </a-button>
         </div>
 
@@ -57,7 +57,7 @@
             </a-button>
           </a-popconfirm>
           <a-button type="primary" style="margin-left: 2em" @click="back" ghost>
-            返回
+            返回题库
           </a-button>
         </div>
       </div>
@@ -101,7 +101,7 @@
     },
     mounted() {
       this.current_state = this.$route.params.state;
-      console.log('current_state: '+this.current_state);
+      // console.log('current_state: '+this.current_state);
       //开始写作
       if(this.current_state === 'write'){
         this.isWrite = true;
@@ -181,7 +181,9 @@
       },
 
       back() {
-        this.$router.go(-1)
+        this.$router.push({
+          name: "composition_bank",
+        })
       },
 
       viewModel(mycpt_id, model) {

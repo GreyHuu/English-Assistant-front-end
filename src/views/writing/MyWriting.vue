@@ -51,14 +51,22 @@
             title: '分数',
             dataIndex: 'mark',
             key: 'mark',
-            align: "center"
+            align: "center",
+            sorter: (a, b) => a.mark - b.mark,
           },
           {
             title: '最近更新时间',
             dataIndex: 'mycpt_create_time',
             key: 'mycpt_create_time',
-            align: "center",/*
-      defaultSortOrder: ['descend']/!*ascend 根据该列数据，对表格进行排序*!/*/
+            align: "center",
+            sorter: function(a, b) {
+              let aTimeString = a.mycpt_create_time;
+              let bTimeString = b.mycpt_create_time;
+              let aTime = new Date(aTimeString).getTime();
+              let bTime = new Date(bTimeString).getTime();
+              return aTime - bTime;
+            },
+            // defaultSortOrder: ['descend']/*ascend 根据该列数据，对表格进行排序*/
           },
           {
             title: '提交次数',
@@ -79,7 +87,7 @@
         //数据
         dataList: [],
         //表格loading状态
-        loading: false
+        loading: false,
       }
     },
     mounted() {

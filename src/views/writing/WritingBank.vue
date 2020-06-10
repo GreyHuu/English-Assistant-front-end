@@ -30,8 +30,10 @@
              <b>【{{ item.cpt_title }}】</b><br>
             <b>要求：</b>{{item.cpt_direction}}
           </span>
-          <a slot="actions" @click="write(index)">开始写作</a>
-          <a  slot="actions" @click="showMore(item.cpt_id)">显示完整题目</a>
+          <a slot="actions" @click="write(index)" v-if="parseInt(item.mycpt_id) === -1">开始写作</a>
+          <a slot="actions" @click="viewItem(item.mycpt_id)" v-else>查看作文</a>
+          <a  slot="actions" @click="showMore(item.cpt_direction)" v-if="isFolded">显示完整题目</a>
+          <a  slot="actions" @click="showLess(item.cpt_direction)" v-else>收起完整题目</a>
           <span slot="extra" style="width: 40em;text-align: right;"><span >{{item.cpt_reference}}</span>次引用</span>
         </a-list-item>
       </a-list>
@@ -46,9 +48,11 @@
     name: 'WritingBank',
     data() {
       return {
+        listData: [],
         // 查询参数
         keyword: '',
-        listData: [],
+        isFolded: true,
+        currentDirection: '',
         pagination: {
           // onChange: page => {
           //   console.log(page);
@@ -56,6 +60,18 @@
           pageSize: 10,
         },
       };
+    },computed: {
+      sortedArticles: function () {
+        return this.listData.sort(function (a, b) {
+          let aTimeString = a.createTime
+          let bTimeString = b.createTime
+          aTimeString = aTimeString.replace(/-/g, '/')
+          bTimeString = bTimeString.replace(/-/g, '/')
+          let aTime = new Date(aTimeString).getTime()
+          let bTime = new Date(bTimeString).getTime()
+          return bTime - aTime
+        })
+      }
     },
     mounted() {
       this.reLoad();
@@ -65,7 +81,7 @@
         this.loading = true;
         // 保存题库信息
         getAllCompositions().then(res => {
-          // console.log(res.data)
+          console.log(res.data)
           this.listData = res.data;
           this.loading = false;
         })
@@ -75,7 +91,7 @@
         getCompositionQuestionByKeyword({
           keyword
         }).then(res => {
-          console.log('getCompositionQuestionByKeyword'+res.data)
+          // console.log('getCompositionQuestionByKeyword'+res.data)
           this.listData = res.data;
           this.loading = false;
         })
@@ -98,20 +114,48 @@
           }
         })
       },
+      //查看已提交的作文
+      viewItem(mycpt_id) {
+        this.$router.push({
+          name: "write",
+          params: {
+            state: 'view',
+            mycpt_id: mycpt_id,
+          }
+        })
+      },
       //展示完整题目
-      showMore() {
-        console.log('点击查看详情')
+      showMore(cpt_direction) {
+        this.isFolded = false;
+        this.currentDirection = cpt_direction;
+        console.log('more: '+this.currentDirection)
+      },
+      //显示部分题目
+      showLess(cpt_direction) {
+        console.log('less: '+this.currentDirection)
+        this.isFolded = true;
+        this.currentDirection = this.getBriefDir(cpt_direction);
+      },
+      getBriefDir(direction) {
+        let tempStr = direction.substr(0, 212);
+        let tempArray = tempStr.split(' ');
+        let briefDir ='';
+        for(let i=0; i <= tempArray.length-2; i++) {
+          briefDir += ''+tempArray[i];
+        }
+
+        return briefDir;
       },
       //通过关键字进行模糊查询
       queryKeyword(keyword) {
         if(keyword !== '' && keyword != null){
-          console.log('keyword不为空 = ' + keyword);
+          // console.log('keyword不为空 = ' + keyword);
           this.loadQuery(keyword);
         }
         else{
           this.reLoad();
         }
-      }
+      },
     },
   };
 </script>

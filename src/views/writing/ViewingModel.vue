@@ -13,8 +13,6 @@
 </template>
 
 <script>
-  import { deleteMyCompositionById } from '@/api/writingApi'
-
   export default {
     name: 'ViewingModel',
     data(){
@@ -29,7 +27,7 @@
     },
     methods: {
       back(mycpt_id) {
-        console.log('查看作文传出mycpt_id: '+mycpt_id)
+        // console.log('查看作文传出mycpt_id: '+mycpt_id)
         this.$router.push({
           name: "write",
           params: {
