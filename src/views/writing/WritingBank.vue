@@ -4,14 +4,20 @@
       <a-form layout="inline">
         <a-row :gutter="48">
           <a-col :md="8" :sm="24">
-            <a-input id="queryKeyword" v-model="queryParam.keyword" placeholder="请输入关键词..." >
+            <a-input id="queryKeyword" v-model="keyword" placeholder="请输入关键词..." >
               <a-icon slot="prefix" type="search" />
             </a-input>
           </a-col>
           <a-col :md="8" :sm="24">
             <span>
-              <a-button type="primary" @click="queryKeyword()">查询</a-button>
-              <a-button style="margin-left: 8px" @click="() => queryParam = ''">重置</a-button>
+              <a-button type="primary" @click="queryKeyword(keyword)">查询</a-button>
+              <a-button style="margin-left: 8px" @click="() => keyword = ''">重置</a-button>
+              <a-tooltip>
+                <template slot="title">
+                  刷新查询
+                </template>
+                <a-icon type="redo" style="margin-left: 100px;"  @click="reLoad"/>
+              </a-tooltip>
             </span>
           </a-col>
         </a-row>
@@ -24,7 +30,7 @@
              <b>【{{ item.cpt_title }}】</b><br>
             <b>要求：</b>{{item.cpt_direction}}
           </span>
-          <a slot="actions" src="" @click="write(index)">开始写作</a>
+          <a slot="actions" @click="write(index)">开始写作</a>
           <a  slot="actions" @click="showMore(item.cpt_id)">显示完整题目</a>
           <span slot="extra" style="width: 40em;text-align: right;"><span >{{item.cpt_reference}}</span>次引用</span>
         </a-list-item>
@@ -34,14 +40,14 @@
 </template>
 
 <script>
-  import { getAllCompositions } from '@/api/writingApi'
+  import { getAllCompositions, getCompositionQuestionByKeyword } from '@/api/writingApi'
 
   export default {
     name: 'WritingBank',
     data() {
       return {
         // 查询参数
-        queryParam: {},
+        keyword: '',
         listData: [],
         pagination: {
           // onChange: page => {
@@ -60,6 +66,16 @@
         // 保存题库信息
         getAllCompositions().then(res => {
           // console.log(res.data)
+          this.listData = res.data;
+          this.loading = false;
+        })
+      },
+      loadQuery(keyword){
+        this.loading = true;
+        getCompositionQuestionByKeyword({
+          keyword
+        }).then(res => {
+          console.log('getCompositionQuestionByKeyword'+res.data)
           this.listData = res.data;
           this.loading = false;
         })
@@ -87,8 +103,14 @@
         console.log('点击查看详情')
       },
       //通过关键字进行模糊查询
-      queryKeyword() {
-        console.log('点击查询');
+      queryKeyword(keyword) {
+        if(keyword !== '' && keyword != null){
+          console.log('keyword不为空 = ' + keyword);
+          this.loadQuery(keyword);
+        }
+        else{
+          this.reLoad();
+        }
       }
     },
   };

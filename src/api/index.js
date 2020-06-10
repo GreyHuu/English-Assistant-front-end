@@ -32,6 +32,7 @@ const writing = {
   deleteMyCompositionById: URL_PREFIX + "/writing/delete-my-composition",
   getAnExistingComposition: URL_PREFIX + "/writing/get-my-composition",
   updateMyComposition: URL_PREFIX + "/writing/update-my-composition",
+  getCompositionQuestionByKeyword: URL_PREFIX + "/writing/get-composition-question-keyword",
 }
 
 export {

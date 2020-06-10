@@ -52,7 +52,7 @@ export function deleteMyCompositionById(params) {
 }
 
 /**
- *
+ *查询一篇我的作文
  * @param params
  * @returns {AxiosPromise}
  */
@@ -66,7 +66,7 @@ export function getAnExistingComposition(params) {
 }
 
 /**
- *
+ *修改作文
  * @param params
  * @returns {AxiosPromise}
  */
@@ -77,4 +77,19 @@ export function updateMyComposition(params) {
     method: 'post',
     data: params
   })
+}
+
+/**
+ * 通过关键字搜索作文题目和要求
+ * @param params
+ * @returns {AxiosPromise}
+ */
+export  function getCompositionQuestionByKeyword(params) {
+  console.log('传到后台的参数： '+JSON.stringify(params));
+  return axios({
+    url: writing.getCompositionQuestionByKeyword,
+    method: 'post',
+    data: params
+  })
+
 }

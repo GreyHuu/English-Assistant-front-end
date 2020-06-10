@@ -99,14 +99,14 @@
       //查询作文详情
       viewItem(mycpt_id) {
         // console.log('查看作文')
-        console.log('mycpt_id='+mycpt_id)
+        // console.log('mycpt_id='+mycpt_id)
         this.$router.push({
-            name: "write",
-            params: {
-              state: 'view',
-              mycpt_id: mycpt_id,
-            }
-          })
+          name: "write",
+          params: {
+            state: 'view',
+            mycpt_id: mycpt_id,
+          }
+        })
       },
       //修改作文
       rewriteItem(mycpt_id) {
@@ -120,7 +120,7 @@
         })
       },
 
-      cancel(e) {
+      cancel() {
         this.$message.error('取消删除');
       },
       // 删除作文
@@ -128,7 +128,7 @@
         deleteMyCompositionById({
           mycpt_id
         }).then(res =>{
-          if(res.message == '删除成功') {
+          if(res.message === '删除成功') {
             // console.log('删除作文' + JSON.stringify(res));
             this.$notification.info({
               message: '操作成功',
@@ -137,7 +137,7 @@
             });
             this.reLoad();
           } else {
-            console.log('服务器返回：添加失败或发生错误')
+            console.log('服务器返回：删除失败或发生错误')
             this.$notification.fail({
               message: '操作失败',
               description: '本次删除失败',
@@ -145,7 +145,7 @@
             })
         }
         })
-      }
+      },
     }
   }
 </script>
