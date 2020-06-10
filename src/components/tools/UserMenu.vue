@@ -35,6 +35,8 @@
   import NoticeIcon from '@/components/NoticeIcon'
   import {mapActions, mapGetters} from 'vuex'
   import {getCurrentUser} from "@/api/userApi";
+  import Vue from 'vue'
+  import {GET_NAME_INTERVAL} from "@/store/mutation-types";
 
   export default {
     name: 'UserMenu',
@@ -45,12 +47,12 @@
       ...mapGetters(['nickname', 'avatar'])
     },
     mounted() {
-      setInterval(() => {
+      const getNameInterval = setInterval(() => {
         getCurrentUser().then(e => {
           this.avatarValue = e.data.nick_name;
         })
       }, 10000);
-
+      Vue.ls.set(GET_NAME_INTERVAL, getNameInterval, 7 * 24 * 60 * 60 * 1000);
     },
     data() {
       return {
