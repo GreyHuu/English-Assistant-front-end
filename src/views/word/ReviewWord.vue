@@ -3,7 +3,10 @@
     <div slot="headerContent">
     </div>
 
-    <a-card>
+    <a-card v-if="len === 0" style="text-align: center;min-height: 500px;">
+      这里空空如也，快去记单词吧~
+    </a-card>
+    <a-card v-else>
       <a-row :space="2">
         <a-col :span="24"  class="wordLeftCol">
           <div>
@@ -11,7 +14,8 @@
             <br/>
             <div class="labaDiv">
               <div style="padding-right: 40px;color: black">/{{ wordinfo.pa }}/</div>
-              <img src="https://s1.ax1x.com/2020/06/05/trULSP.png" alt="" style="width: 30px;height: 30px;"/>
+              <img src="https://s1.ax1x.com/2020/06/05/trULSP.png" alt="" style="width: 25px;height: 25px;" @click="play"/>
+              <audio ref='audio' :src="wordinfo.pron" style="display: none"></audio>
             </div>
 
             <br/>
@@ -20,7 +24,7 @@
           <br/>
           <div>
             <div>
-              <div style="color: black;font-weight: bold;">例句1</div>
+              <div style="font-size: 15px;color:#002140;">例句1</div>
               <br/>
               <p class="exampleP">
                 {{ wordinfo.englishInstance1 }}
@@ -31,7 +35,7 @@
             </div>
             <br>
             <div>
-              <div style="color: black;font-weight: bold;">例句2</div>
+              <div style="font-size: 15px;color:#002140;">例句2</div>
               <br/>
               <p class="exampleP">
                 {{ wordinfo.englishInstance2 }}
@@ -43,25 +47,26 @@
           </div>
           <br>
           <div>
-            <a-button type="primary" class="a-button" @click="removeWord">认识</a-button>
+            <a-button type="primary" class="a-button" @click="removeWord(wordinfo.id)">认识</a-button>
             <a-button type="default" class="a-button" @click="newWord">下一个</a-button>
             <a-button type="danger" class="a-button" @click="newWord">陌生</a-button>
           </div>
         </a-col>
       </a-row>
     </a-card>
-    <a-card>
+    <br/>
+    <a-card  v-if="len !== 0">
       <a-row>
         <a-col :span="24">
-          <h4 style="color: #1890ff;font-size: 20px;">list</h4>
-          <br>
+          <div style="color: #002140;font-size: 15px;"><img src="https://s1.ax1x.com/2020/06/10/tolXXd.png" alt="" style="padding-right: 15px;"/>全部生词</div>
+          <hr><br/>
           <div v-for="item in newWordList" :key="item.id">
             <a-row class="wordRow">
               <a-col :span="5">
                 <div class="wordDivRight">{{ item.englishWord }}</div>
               </a-col>
               <a-col :span="15"><p style="color: black" class="wordRightMean">{{ item.chineseWord }}</p></a-col>
-              <a-col :span="2"><a-button type="primary" @click="removeWord">认识</a-button></a-col>
+              <a-col :span="2"><a-button type="primary" @click="removeWord(item.id)">认识</a-button></a-col>
             </a-row>
             <br>
           </div>
@@ -126,8 +131,8 @@
             this.wordinfo = this.newWordList[this.index]
           })
       },
-      removeWord(){
-        this.$http.delete(this.baseUrl + "/word/deleteWord")
+      removeWord(word_id){
+        this.$http.delete(this.baseUrl + "/word/deleteWord/" + word_id)
           .then(res => {
             console.log(res)
           })
@@ -145,6 +150,10 @@
           this.index = this.index + 1;
           this.wordinfo = this.newWordList[this.index];
         }
+      },
+      // audio的play事件
+      play() {
+        this.$refs.audio.play()
       }
     }
   }
@@ -178,10 +187,11 @@
     /*font-weight: bold;*/
   }
   .wordDivRight{
-    font-size: 15px;
+    font-size: 18px;
     font-family: "Times New Roman";
   }
   .wordRightMean{
-    font-size: 10px;
+    font-size: 15px;
+    font-family: "Adobe 楷体 Std R";
   }
 </style>

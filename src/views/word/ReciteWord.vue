@@ -10,7 +10,8 @@
         <div class="labaDiv">
           <div style="margin-right: 40px;color: black" >/{{ wordinfo.pa }}/</div>
 
-          <img src="https://s1.ax1x.com/2020/06/05/trULSP.png" alt="" style="width: 30px;height: 30px;"/>
+          <img src="https://s1.ax1x.com/2020/06/05/trULSP.png" alt="" style="width: 25px;height: 25px;" @click="play" class="img"/>
+          <audio ref='audio' :src="wordinfo.pron" style="display: none"></audio>
         </div>
 
         <br/><p style="color: black">{{ wordinfo.chineseWord }}</p>
@@ -19,7 +20,7 @@
       <br/>
       <div>
         <div>
-          <div style="color: black;font-weight: bold;" >例句1</div><br/>
+          <div style="font-size: 15px;color:#002140;" >例句1</div><br/>
           <p class="exampleP">
             {{ wordinfo.englishInstance1 }}
           </p>
@@ -29,7 +30,7 @@
         </div>
         <br>
         <div>
-          <div style="color: black;font-weight: bold;">例句2</div><br/>
+          <div style="font-size: 15px;color:#002140;">例句2</div><br/>
           <p  class="exampleP">
             {{ wordinfo.englishInstance2 }}
           </p>
@@ -116,6 +117,9 @@
               this.$message.success(
                 '很棒，计划已完成！您可以继续学习~'
               )
+              // 重置索引
+              this.index =  0
+              // 取得数据
               this.getWord()
             })
         }else{
@@ -125,7 +129,6 @@
       },
       // 添加新词
       saveNewWord(){
-        console.log(this.wordinfo.id)
         const word_id = this.wordinfo.id;
         this.$http.post(this.baseUrl + "/word/saveWord/"+word_id)
           .then(res => {
@@ -134,6 +137,10 @@
               '已加入生词表 √'
             )
           })
+      },
+      // audio的play事件
+      play() {
+        this.$refs.audio.play()
       }
     }
   }
@@ -161,5 +168,12 @@
     font-size: 15px;
     color: black;
     /*font-weight: bold;*/
+  }
+  .myaudio {
+    width: 800px;
+    height: 40px;
+    margin-top: 5px;
+    outline: none;
+    background-color: #f1f3f4;
   }
 </style>
