@@ -28,15 +28,9 @@ const reading = {
 }
 
 const writing = {
-  getAllCompositions: URL_PREFIX + "/writing/get-all-compositions",
-  addCompositionAndCount: URL_PREFIX + "/writing/add-a-composition-and-count",
-  getAllMyCompositions: URL_PREFIX + "/writing/get-all-my-compositions",
-  deleteMyCompositionById: URL_PREFIX + "/writing/delete-my-composition",
-  getAnExistingComposition: URL_PREFIX + "/writing/get-my-composition",
-  updateMyComposition: URL_PREFIX + "/writing/update-my-composition",
-  getCompositionQuestionByKeyword: URL_PREFIX + "/writing/get-composition-question-keyword",
+  GetAllCompositions: URL_PREFIX + "/writing/get-all-compositions",
+  AddCompositionAndCount: URL_PREFIX + "/writing/add-a-composition-and-count/{cpt_reference}",
 }
-
 export {
   api,
   reading,

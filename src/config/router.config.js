@@ -120,16 +120,6 @@ export const asyncRouterMap = [
               title: '写作文',
               keepAlive: true
             }
-          },
-          {
-            path: '/writing/composition/view_model',
-            name: 'viewModel',
-            component: () => import('@/views/writing/ViewingModel'),
-            hidden: true,
-            meta: {
-              title: '写作文',
-              keepAlive: true
-            }
           }
         ]
       },

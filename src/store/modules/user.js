@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import {getInfo} from '@/api/login'
 import {login, loginByPhone, logout} from "@/api/userApi"
-import {ACCESS_TOKEN, CURRENT_USER, SESSION_ID, GET_NAME_INTERVAL} from '@/store/mutation-types'
+import {ACCESS_TOKEN, CURRENT_USER, SESSION_ID} from '@/store/mutation-types'
 import {isSuccess, welcome} from '@/utils/util'
 
 const user = {
@@ -123,6 +123,7 @@ const user = {
 
     // 登出
     Logout({commit, state}) {
+      const that = this;
       return new Promise((resolve, reject) => {
         logout(state.token).then(() => {
           resolve();
@@ -132,10 +133,6 @@ const user = {
           // 清楚本地ls
           commit('SET_TOKEN', '')
           commit('SET_ROLES', [])
-          const interval = Vue.ls.get(GET_NAME_INTERVAL);
-          // 清空获取头像的轮询
-          if (interval)
-            clearInterval(interval)
           Vue.ls.remove(SESSION_ID);
           Vue.ls.remove(ACCESS_TOKEN);
           Vue.ls.remove(CURRENT_USER);
