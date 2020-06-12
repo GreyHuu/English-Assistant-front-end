@@ -118,7 +118,7 @@
       },
       //修改作文
       rewriteItem(mycpt_id) {
-        console.log('修改作文')
+        // console.log('修改作文')
         this.$router.push({
           name: "write",
           params: {

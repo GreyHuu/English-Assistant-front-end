@@ -28,13 +28,16 @@
         <a-list-item slot="renderItem" slot-scope="item, index" >
           <span style="width: 200em">
              <b>【{{ item.cpt_title }}】</b><br>
-            <b>要求：</b>{{item.cpt_direction}}
+            <b>要求：</b>{{item.current_direction}}
           </span>
           <a slot="actions" @click="write(index)" v-if="parseInt(item.mycpt_id) === -1">开始写作</a>
           <a slot="actions" @click="viewItem(item.mycpt_id)" v-else>查看作文</a>
-          <a  slot="actions" @click="showMore(item.cpt_direction)" v-if="isFolded">显示完整题目</a>
-          <a  slot="actions" @click="showLess(item.cpt_direction)" v-else>收起完整题目</a>
-          <span slot="extra" style="width: 40em;text-align: right;"><span >{{item.cpt_reference}}</span>次引用</span>
+          <a  slot="actions" @click="showMore(index)" v-if="isFolded">显示完整题目</a>
+          <a  slot="actions" @click="showLess(index)" v-else>收起完整题目</a>
+          <span slot="extra" style="width: 40em;text-align: right;">
+            <span >{{item.cpt_reference}}</span>
+            次引用
+          </span>
         </a-list-item>
       </a-list>
     </div>
@@ -60,18 +63,6 @@
           pageSize: 10,
         },
       };
-    },computed: {
-      sortedArticles: function () {
-        return this.listData.sort(function (a, b) {
-          let aTimeString = a.createTime
-          let bTimeString = b.createTime
-          aTimeString = aTimeString.replace(/-/g, '/')
-          bTimeString = bTimeString.replace(/-/g, '/')
-          let aTime = new Date(aTimeString).getTime()
-          let bTime = new Date(bTimeString).getTime()
-          return bTime - aTime
-        })
-      }
     },
     mounted() {
       this.reLoad();
@@ -81,7 +72,7 @@
         this.loading = true;
         // 保存题库信息
         getAllCompositions().then(res => {
-          console.log(res.data)
+          // console.log(res.data)
           this.listData = res.data;
           this.loading = false;
         })
@@ -125,26 +116,17 @@
         })
       },
       //展示完整题目
-      showMore(cpt_direction) {
+      showMore(index) {
         this.isFolded = false;
-        this.currentDirection = cpt_direction;
-        console.log('more: '+this.currentDirection)
+        this.listData[index].current_direction = this.listData[index].cpt_direction;
       },
       //显示部分题目
-      showLess(cpt_direction) {
-        console.log('less: '+this.currentDirection)
+      showLess(index) {
         this.isFolded = true;
-        this.currentDirection = this.getBriefDir(cpt_direction);
+        this.listData[index].current_direction = this.getBriefDir(this.listData[index].cpt_direction);
       },
       getBriefDir(direction) {
-        let tempStr = direction.substr(0, 212);
-        let tempArray = tempStr.split(' ');
-        let briefDir ='';
-        for(let i=0; i <= tempArray.length-2; i++) {
-          briefDir += ''+tempArray[i];
-        }
-
-        return briefDir;
+        return direction.substring(0, 212)+"...";;
       },
       //通过关键字进行模糊查询
       queryKeyword(keyword) {

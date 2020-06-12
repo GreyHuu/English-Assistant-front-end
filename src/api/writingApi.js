@@ -1,5 +1,5 @@
 import { writing } from './index'
-import {axios} from '@/utils/request'
+import {axios, AxiosPromise} from '@/utils/request'
 
 
 /**
@@ -20,8 +20,9 @@ export function getAllCompositions() {
  * @constructor
  */
 export function addCompositionAndCount(params) {
+  console.log("传给后台的mycpt：： "+params.params.mycpt)
   return axios({
-    url: writing.addCompositionAndCount+'/'+params.cpt_reference,
+    url: writing.addCompositionAndCount +'/'+params.cpt_id+'/'+params.cpt_reference,
     method: 'post',
     data: params.params
   })

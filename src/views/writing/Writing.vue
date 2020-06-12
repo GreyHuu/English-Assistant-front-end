@@ -14,7 +14,7 @@
           <a-popconfirm title="是否确认提交作文?"
                         ok-text="确认"
                         cancel-text="取消"
-                        @confirm="write(composition.mycpt_id, composition.mycpt)"
+                        @confirm="write(composition.mycpt)"
                         @cancel="cancel('取消提交')">
             <a-button type="primary" ghost>
               提交
@@ -138,7 +138,7 @@
             this.composition.cpt_direction = res.data.cpt_direction;
             this.composition.cpt_model = res.data.cpt_model;
           }else {
-            console.log('服务器返回：添加失败或发生错误');
+            // console.log('服务器返回：添加失败或发生错误');
             this.$notification.fail({
               message: '请求失败',
               description: '退回到上一页',
@@ -150,6 +150,7 @@
       },
 
       write(mycpt) {
+        console.log('写作文： '+this.composition.mycpt)
         addCompositionAndCount({
           cpt_reference: this.cpt_reference + 1,
           cpt_id: this.composition.cpt_id,
