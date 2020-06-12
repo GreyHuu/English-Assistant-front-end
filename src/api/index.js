@@ -11,6 +11,11 @@ const api = {
   CompareSms: URL_PREFIX + '/phone/compare-code',
   UserInfo: URL_PREFIX + '/users/get-current-user',
   UpdateUser: URL_PREFIX + '/users/update-user',
+  GetAllNews: URL_PREFIX + '/news/get-all-news',
+  GetAllComments: URL_PREFIX + '/comments/get-all-comments',
+  GetTheComments: URL_PREFIX + '/comments/get-the-comments',
+  DeleteTheComments: URL_PREFIX + '/comments/delete-the-comments',
+  InsertTheComments: URL_PREFIX + '/comments/insert-the-comments',
 }
 const reading = {
   GetAllReadingGroup: URL_PREFIX + "/reading/get-all-groups",

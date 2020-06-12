@@ -74,6 +74,10 @@ const user = {
             Vue.ls.set(ACCESS_TOKEN, data.token, 7 * 24 * 60 * 60 * 1000)
             //将用户名称放入localStorage进去是否登录判断
             Vue.ls.set(CURRENT_USER, data.userName, 7 * 24 * 60 * 60 * 1000);
+            const interval = Vue.ls.get(GET_NAME_INTERVAL);
+            // 清空获取头像的轮询
+            if (interval)
+              clearInterval(interval)
             // state中放入token
             commit('SET_TOKEN', data.token);
             resolve(response);

@@ -25,7 +25,7 @@ export const asyncRouterMap = [
           {
             path: '/news/reading',
             name: 'news_reading',
-            component: () => import('@/views/dashboard/Analysis'),
+            component: () => import('@/views/news/news'),
             meta: {
               title: '英语新闻',
               keepAlive: true,
@@ -34,7 +34,7 @@ export const asyncRouterMap = [
           {
             path: '/news/record',
             name: 'news_record',
-            component: () => import('@/views/dashboard/Workplace'),
+            component: () => import('@/views/news/comments'),
             meta: {
               title: '我的评论',
               keepAlive: true,

@@ -56,7 +56,7 @@
     },
     data() {
       return {
-        avatarValue: "田丰慧",
+        avatarValue: "",
       }
     },
     methods: {
