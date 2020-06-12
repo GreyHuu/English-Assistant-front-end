@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import {getInfo} from '@/api/login'
 import {login, loginByPhone, logout} from "@/api/userApi"
-import {ACCESS_TOKEN, CURRENT_USER, SESSION_ID} from '@/store/mutation-types'
+import {ACCESS_TOKEN, CURRENT_USER, SESSION_ID, GET_NAME_INTERVAL} from '@/store/mutation-types'
 import {isSuccess, welcome} from '@/utils/util'
 
 const user = {
