@@ -46,7 +46,7 @@
             </div>
           </div>
           <br>
-          <div>
+          <div class="buttonGroup">
             <a-button type="primary" class="a-button" @click="removeWord(wordinfo.id)">认识</a-button>
             <a-button type="default" class="a-button" @click="newWord">下一个</a-button>
             <a-button type="danger" class="a-button" @click="newWord">陌生</a-button>
@@ -60,7 +60,7 @@
         <a-col :span="24">
           <div style="color: #002140;font-size: 15px;"><img src="https://s1.ax1x.com/2020/06/10/tolXXd.png" alt="" style="padding-right: 15px;"/>全部生词</div>
           <hr><br/>
-          <div v-for="item in newWordList" :key="item.id">
+          <div v-for="item in newWordList" :key="item.id" @click="getNewWordDetail(item)" class="wordListDiv">
             <a-row class="wordRow">
               <a-col :span="5">
                 <div class="wordDivRight">{{ item.englishWord }}</div>
@@ -104,6 +104,7 @@
           // 单词例子2中文
           chineseInstance2:'工程师正在讨论这个建筑问题。'
         },
+        // 生词
         newWordList:[],
         baseUrl : 'http://localhost:8888',
         avatar:'',
@@ -120,6 +121,9 @@
     created(){
       this.getNewWordList()
     },
+    mounted(){
+      this.getNewWordList()
+    },
     methods: {
       // 拿到生词
       getNewWordList(){
@@ -132,9 +136,10 @@
           })
       },
       removeWord(word_id){
-        this.$http.delete(this.baseUrl + "/word/deleteWord/" + word_id)
+        this.$http.post(this.baseUrl + "/word/deleteWord/" + word_id)
           .then(res => {
             console.log(res)
+            this.getNewWordList()
           })
       },
       newWord(){
@@ -154,6 +159,9 @@
       // audio的play事件
       play() {
         this.$refs.audio.play()
+      },
+      getNewWordDetail(item){
+        this.wordinfo = item
       }
     }
   }
@@ -176,7 +184,7 @@
   }
 
   .meanP {
-    color: #909399;
+    color: black;
     font-size: 10px;
   }
 
@@ -189,9 +197,15 @@
   .wordDivRight{
     font-size: 18px;
     font-family: "Times New Roman";
+    color: #000;
   }
   .wordRightMean{
     font-size: 15px;
     font-family: "Adobe 楷体 Std R";
   }
+  .wordListDiv:hover{
+    font-weight: bold;
+    cursor:pointer;
+  }
+
 </style>

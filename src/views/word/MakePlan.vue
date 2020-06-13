@@ -217,7 +217,11 @@
       }
     },
     mounted() {
-      this.getgetStatitics()
+      this.getStatitics()
+      this.loading = false
+    },
+    created(){
+      this.getStatitics()
       this.loading = false
     },
     components: {
@@ -229,12 +233,16 @@
     },
     methods: {
       //拿到学习进度 每日单词量 剩余天数
-      getgetStatitics() {
+      getStatitics() {
         this.$http.get(this.baseUrl + '/plan/getStatiticsById')
           .then(res => {
             this.todayWord = res.data[0] + ''
-            this.remainDay = res.data[1] + ''
+            this.remainDay = res.data[1] + ''//没有背的单词需要时间 data[2]所有单词需要时间
             this.studyProcess = (res.data[2] - res.data[1]) * res.data[0] + '/' + res.data[2] * res.data[0]
+            if(res.data[2] < res.data[1]){
+              this.getStatitics()
+            }
+
             console.log(res)
           })
       },
@@ -245,14 +253,27 @@
       // 提交计划
       Submit(type, number) {
         this.setPlanState = false
-        this.$http.put(this.baseUrl + '/plan/updateDailyWordInPlan/' + number + '/' + type)
+        var tt=/^[1-9]\d*$/
+        if(!tt.test(number)){
+          this.$message.error(
+            '计划设置不合理，请输入正整数！'
+          )
+          return
+        }
+        this.$message.info("设置计划需要一点时间，请等待~")
+
+        this.$http.post(this.baseUrl + '/plan/updateDailyWordInPlan/' + number + '/' + type)
           .then(res => {
             console.log(res)
             this.$message.success(
               '计划设置成功'
             )
-            this.getgetStatitics()
-          })
+            this.getStatitics()
+          }, setTimeout(() => {
+            this.$message.info("我正在拼命设置计划，您可以去小站其他地方学习~")
+            this.getStatitics()
+            this.$message.info("您可以刷新一下哦~")
+          }, 10000))
       },
       // 去背诵单词页
       goRecite() {

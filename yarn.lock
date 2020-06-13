@@ -10454,11 +10454,6 @@ vue-template-es2015-compiler@^1.6.0, vue-template-es2015-compiler@^1.9.0:
   resolved "https://registry.yarnpkg.com/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.9.1.tgz#1ee3bc9a16ecbf5118be334bb15f9c46f82f5825"
   integrity sha512-4gDntzrifFnCEvyoO8PqyJDmguXgVPxKiIxrBKjIowvL9l+N66196+72XVYR8BBf1Uv1Fgt3bGevJ+sEmxfZzw==
 
-vue2-countdown@^1.0.8:
-  version "1.0.8"
-  resolved "https://r.cnpmjs.org/vue2-countdown/download/vue2-countdown-1.0.8.tgz#e0f20b6af6badb33cf99c8cc3df51d2c77f2ef35"
-  integrity sha1-4PILava62zPPmcjMPfUdLHfy7zU=
-
 vue@^2.5.3:
   version "2.6.7"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.6.7.tgz#254f188e7621d2d19ee28d0c0442c6d21b53ae2d"
