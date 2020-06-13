@@ -51,3 +51,95 @@ export function compareGroupAnswers(parma) {
     data: parma
   })
 }
+
+/**
+ * 搜索题目组
+ * @param parma
+ * @returns {AxiosPromise}
+ */
+export function searchGroupByTitle(parma) {
+  return axios({
+    url: reading.SearchGroupsByTitle,
+    method: 'post',
+    data: parma
+  })
+}
+
+/**
+ * 删除题目组
+ * @param parma
+ * @returns {AxiosPromise}
+ */
+export function deleteGroupById(parma) {
+  return axios({
+    url: reading.DeleteGroup,
+    method: 'post',
+    data: parma
+  })
+}
+
+/**
+ * 插入历史记录
+ * @param parma
+ * @returns {AxiosPromise}
+ */
+export function insertHistory(parma) {
+  return axios({
+    url: reading.InsertHistory,
+    method: 'post',
+    data: parma
+  })
+}
+
+/**
+ * 获得用户的历史记录
+ * @param parma
+ * @returns {AxiosPromise}
+ */
+export function getHistory(parma) {
+  return axios({
+    url: reading.GetAllReadingList,
+    method: 'post',
+    data: parma
+  })
+}
+
+/**
+ * 获得list 的分析
+ * @param parma
+ * @returns {AxiosPromise}
+ */
+export function getHistoryData(parma) {
+  return axios({
+    url: reading.GetAllReadingListData,
+    method: 'post',
+    data: parma
+  })
+}
+
+/**
+ * 搜索题目组
+ * @param parma
+ * @returns {AxiosPromise}
+ * @constructor
+ */
+export function searchReadingListData(parma) {
+  return axios({
+    url: reading.SearchReadingListData,
+    method: 'post',
+    data: parma
+  })
+}
+
+/**
+ * 删除历史记录
+ * @param parma
+ * @returns {AxiosPromise}
+ */
+export function deleteReadingList(parma) {
+  return axios({
+    url: reading.DeleteReadingList,
+    method: 'post',
+    data: parma
+  })
+}

@@ -6,103 +6,73 @@
         <a-form layout="vertical">
           <a-form-item
             label="昵称"
+            :required="true"
           >
-            <a-input placeholder="给自己起个名字"/>
-          </a-form-item>
-          <a-form-item
-            label="Bio"
-          >
-            <a-textarea rows="4" placeholder="You are not alone."/>
+            <a-input v-model="nickName" placeholder="请输入昵称"/>
           </a-form-item>
 
           <a-form-item
             label="电子邮件"
-            :required="false"
+            :required="true"
           >
-            <a-input placeholder="exp@admin.com"/>
+            <a-input v-model="email" placeholder="请输入电子邮件"/>
           </a-form-item>
           <a-form-item
-            label="加密方式"
-            :required="false"
+            label="手机号码"
+            :required="true"
           >
-            <a-select defaultValue="aes-256-cfb">
-              <a-select-option value="aes-256-cfb">aes-256-cfb</a-select-option>
-              <a-select-option value="aes-128-cfb">aes-128-cfb</a-select-option>
-              <a-select-option value="chacha20">chacha20</a-select-option>
-            </a-select>
+            <a-input v-model="mobile" placeholder="请输入手机号码"/>
           </a-form-item>
-          <a-form-item
-            label="连接密码"
-            :required="false"
-          >
-            <a-input placeholder="h3gSbecd"/>
-          </a-form-item>
-          <a-form-item
-            label="登录密码"
-            :required="false"
-          >
-            <a-input placeholder="密码"/>
-          </a-form-item>
-
           <a-form-item>
-            <a-button type="primary">提交</a-button>
-            <a-button style="margin-left: 8px">保存</a-button>
+            <a-button type="primary" @click="handleUpdateUser">提交</a-button>
           </a-form-item>
         </a-form>
 
       </a-col>
-      <a-col :md="24" :lg="8" :style="{ minHeight: '180px' }">
-        <div class="ant-upload-preview" @click="$refs.modal.edit(1)">
-          <a-icon type="cloud-upload-o" class="upload-icon"/>
-          <div class="mask">
-            <a-icon type="plus"/>
-          </div>
-          <img :src="option.img"/>
-        </div>
-      </a-col>
+
 
     </a-row>
 
-    <avatar-modal ref="modal" @ok="setavatar"/>
 
   </div>
 </template>
 
 <script>
   import AvatarModal from './AvatarModal'
-  import {getCurrentUser} from "@/api/userApi";
+  import {getCurrentUser, updateUser} from "@/api/userApi";
 
   export default {
     components: {
       AvatarModal
     },
     created() {
-      getCurrentUser();
+      getCurrentUser().then(e => {
+        const {data} = e;
+        this.nickName = data.nick_name;
+        this.mobile = data.mobile;
+        this.email = data.email;
+        this.id = data.id;
+      });
     },
     data() {
       return {
         // cropper
         preview: {},
-        option: {
-          img: '/avatar2.jpg',
-          info: true,
-          size: 1,
-          outputType: 'jpeg',
-          canScale: false,
-          autoCrop: true,
-          // 只有自动截图开启 宽度高度才生效
-          autoCropWidth: 180,
-          autoCropHeight: 180,
-          fixedBox: true,
-          // 开启宽度和高度比例
-          fixed: true,
-          fixedNumber: [1, 1]
-        }
+        nickName: "",
+        mobile: "",
+        email: ""
       }
     },
     methods: {
-      setavatar(url) {
-        this.option.img = url
+      handleUpdateUser() {
+        updateUser({
+          id: this.id,
+          nick_name: this.nickName,
+          mobile: this.mobile,
+          email: this.email
+        }).then(e => {
+          this.$message.success("更新数据成功");
+        })
       }
     }
   }

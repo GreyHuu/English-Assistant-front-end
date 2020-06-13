@@ -66,6 +66,10 @@ export function register(paramater) {
   })
 }
 
+/**
+ * 注销登录
+ * @returns {AxiosPromise}
+ */
 export function logout() {
   return axios({
     url: api.Logout,
@@ -83,6 +87,15 @@ export function getCurrentUser() {
   })
 }
 
+
+export function updateUser(params) {
+  return axios({
+    url: api.UpdateUser,
+    method: 'post',
+    data: params
+  })
+}
+
 /**
  * 测试后台跨域处理的测试接口
  * @returns {AxiosPromise}
@@ -93,3 +106,5 @@ export function getAllUsers() {
     method: 'get',
   })
 }
+
+

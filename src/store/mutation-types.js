@@ -12,7 +12,8 @@ export const DEFAULT_FIXED_HEADER_HIDDEN = 'DEFAULT_FIXED_HEADER_HIDDEN'
 export const DEFAULT_CONTENT_WIDTH_TYPE = 'DEFAULT_CONTENT_WIDTH_TYPE'
 export const DEFAULT_MULTI_TAB = 'DEFAULT_MULTI_TAB'
 
+export const GET_NAME_INTERVAL = 'GET_NAME_INTERVAL'
 export const CONTENT_WIDTH_TYPE = {
-  Fluid: 'Fluid',
-  Fixed: 'Fixed'
+    Fluid: 'Fluid',
+    Fixed: 'Fixed'
 }

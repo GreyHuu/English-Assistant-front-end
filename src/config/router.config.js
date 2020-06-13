@@ -25,7 +25,7 @@ export const asyncRouterMap = [
           {
             path: '/news/reading',
             name: 'news_reading',
-            component: () => import('@/views/dashboard/Analysis'),
+            component: () => import('@/views/news/news'),
             meta: {
               title: '英语新闻',
               keepAlive: true,
@@ -34,7 +34,7 @@ export const asyncRouterMap = [
           {
             path: '/news/record',
             name: 'news_record',
-            component: () => import('@/views/dashboard/Workplace'),
+            component: () => import('@/views/news/comments'),
             meta: {
               title: '我的评论',
               keepAlive: true,
@@ -46,8 +46,8 @@ export const asyncRouterMap = [
       {
         path: '/words',
         name: "words",
+        component: RouteView,
         redirect: '/words/make_plan',
-        component: PageView,
         meta: {
           title: '单词背诵',
           icon: 'edit'
@@ -56,7 +56,7 @@ export const asyncRouterMap = [
           {
             path: '/words/make_plan',
             name: 'make_plan',
-            component: () => import('@/views/form/BasicForm'),
+            component: () => import('@/views/word/MakePlan'),
             meta: {
               title: '制定计划',
               keepAlive: true
@@ -65,7 +65,7 @@ export const asyncRouterMap = [
           {
             path: '/words/recite_words',
             name: 'recite_words',
-            component: () => import('@/views/form/stepForm/StepForm'),
+            component: () => import('@/views/word/ReciteWord'),
             meta: {
               title: '背诵单词',
               keepAlive: true
@@ -74,7 +74,7 @@ export const asyncRouterMap = [
           {
             path: '/words/review_new_words',
             name: 'review_new_words',
-            component: () => import('@/views/form/advancedForm/AdvancedForm'),
+            component: () => import('@/views/word/ReviewWord'),
             meta: {
               title: '生词复习',
               keepAlive: true
@@ -89,7 +89,7 @@ export const asyncRouterMap = [
         component: PageView,
         redirect: '/writing/composition_bank',
         meta: {
-          title: '作文练习',
+          title: '写作练习',
           icon: 'snippets'
         },
         children: [
@@ -115,6 +115,16 @@ export const asyncRouterMap = [
             path: '/writing/composition_bank/write',
             name: 'write',
             component: () => import('@/views/writing/Writing'),
+            hidden: true,
+            meta: {
+              title: '写作文',
+              keepAlive: true
+            }
+          },
+          {
+            path: '/writing/composition/view_model',
+            name: 'viewModel',
+            component: () => import('@/views/writing/ViewingModel'),
             hidden: true,
             meta: {
               title: '写作文',
@@ -205,16 +215,6 @@ export const asyncRouterMap = [
                 meta: {
                   title: '基本设置', hidden: true
                 }
-              },
-              {
-                path: '/account/settings/security',
-                name: 'SecuritySettings',
-                component: () => import('@/views/account/settings/Security'),
-                meta: {
-                  title: '安全设置',
-                  hidden: true,
-                  keepAlive: true
-                }
               }
             ]
           }
@@ -233,13 +233,13 @@ export const asyncRouterMap = [
           {
             path: '/result/success',
             name: 'ResultSuccess',
-            component: () => import(/* webpackChunkName: "result" */ '@/views/result/Success'),
+            component: () => import('@/views/result/Success'),
             meta: {title: '成功', keepAlive: false, hiddenHeaderContent: true}
           },
           {
             path: '/result/fail',
             name: 'ResultFail',
-            component: () => import(/* webpackChunkName: "result" */ '@/views/result/Error'),
+            component: () => import('@/views/result/Error'),
             meta: {title: '失败', keepAlive: false, hiddenHeaderContent: true}
           }
         ]
@@ -318,7 +318,7 @@ export const constantRouterMap = [
       {
         path: 'home',
         name: 'TestHome',
-        component: () => import('@/views/Home')
+        component: () => import('@/views/dashboard/TestWork')
       }
     ]
   },

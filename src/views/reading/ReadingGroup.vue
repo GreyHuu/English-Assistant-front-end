@@ -11,7 +11,7 @@
           <a-col offset="12" :md="4" :sm="24">
             <span class="table-page-search-submitButtons">
               <a-button type="primary" @click="queryTitle">查询</a-button>
-              <a-button style="margin-left: 8px" @click="() => queryParam = ''">重置</a-button>
+              <a-button style="margin-left: 8px" @click="clearQuery">重置</a-button>
             </span>
           </a-col>
         </a-row>
@@ -32,7 +32,7 @@
             title="是否确认删除该阅读题目（包括删除包含该阅读题组的记录以及其阅读题）?"
             ok-text="确认"
             cancel-text="取消"
-            @confirm="confirmDelete"
+            @confirm="confirmDelete(record.id)"
           >
             <a>删除</a>
         </a-popconfirm>
@@ -44,7 +44,7 @@
 
 <script>
   import {STable} from '@/components'
-  import {getAllGroup} from "@/api/readingApi";
+  import {getAllGroup, searchGroupByTitle, deleteGroupById} from "@/api/readingApi";
   import moment from "moment"
 
   export default {
@@ -56,7 +56,7 @@
       return {
         description: '您可以在此页面进行阅读题目组的概况浏览和选择',
         // 查询参数
-        queryParam: {},
+        queryParam: "",
         // 表头
         columns: [
           {
@@ -107,16 +107,19 @@
       }
     },
     mounted() {
-      this.loading = true;
-      // 获取组
-      getAllGroup().then(res => {
-        const {data} = res;
-        data.key = data.id;
-        this.data = data;
-        this.loading = false;
-      })
+      this.reFlush();
     },
     methods: {
+      reFlush() {
+        this.loading = true;
+        // 获取组
+        getAllGroup().then(res => {
+          const {data} = res;
+          data.key = data.id;
+          this.data = data;
+          this.loading = false;
+        })
+      },
       //跳转到该练习
       goToContent(id) {
         this.$router.push({
@@ -129,11 +132,31 @@
       },
       // 删除该练习组
       confirmDelete(id) {
-
+        deleteGroupById({
+          id
+        }).then(res => {
+          this.$message.success('删除成功！');
+          this.reFlush();
+        })
       },
       //模糊搜索题目组
       queryTitle() {
-
+        if (this.queryParam) {
+          this.loading = true;
+          searchGroupByTitle({title: this.queryParam}).then(res => {
+            const {data} = res;
+            data.key = data.id;
+            this.data = data;
+            this.loading = false;
+          });
+        } else {
+          this.$message.warning('请输入要搜索的题目');
+        }
+      },
+      // 重置查询
+      clearQuery() {
+        this.queryParam = "";
+        this.reFlush();
       }
     }
   }
