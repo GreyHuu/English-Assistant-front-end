@@ -44,7 +44,7 @@ import {Button,comment} from 'ant-design-vue';
 import moment from 'moment';
 import { getAllNews } from '@/api/newsApi';
 import {getAllComments, insertComment} from '@/api/CommentsApi';
-import { getCurrentUser } from '@/api/userApi';
+import { getCurrentUsers} from '@/api/CommentsApi';
 Vue.use(Button).use(comment);
 
 export default {
@@ -107,8 +107,6 @@ export default {
             that.$refs.comment[index].value='';
             that.getComments();
         })
-
-
       },
 
       //获取新闻信息

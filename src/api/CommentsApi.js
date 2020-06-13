@@ -43,3 +43,14 @@ export function insertComment(paramater){
     data: paramater
   })
 }
+/**
+ * 获得当前用户
+ * @param paramater
+ * @returns {AxiosPromise}
+ */
+export function getCurrentUsers() {
+  return axios({
+    url: api.UserInfo,
+    method: 'get',
+  })
+}
