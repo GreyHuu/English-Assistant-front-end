@@ -32,7 +32,7 @@
           </span>
           <a slot="actions" @click="write(index)" v-if="parseInt(item.mycpt_id) === -1">开始写作</a>
           <a slot="actions" @click="viewItem(item.mycpt_id)" v-else>查看作文</a>
-          <a  slot="actions" @click="showMore(index)" v-if="isFolded">显示完整题目</a>
+          <a  slot="actions" @click="showMore(index)" v-if="item.folded">显示完整题目</a>
           <a  slot="actions" @click="showLess(index)" v-else>收起完整题目</a>
           <span slot="extra" style="width: 40em;text-align: right;">
             <span >{{item.cpt_reference}}</span>
@@ -72,7 +72,7 @@
         this.loading = true;
         // 保存题库信息
         getAllCompositions().then(res => {
-          // console.log(res.data)
+          console.log(res.data)
           this.listData = res.data;
           this.loading = false;
         })
@@ -117,16 +117,22 @@
       },
       //展示完整题目
       showMore(index) {
-        this.isFolded = false;
+
+        this.listData[index].folded = false;
+        console.log('more时： '+this.listData[index].folded)
         this.listData[index].current_direction = this.listData[index].cpt_direction;
       },
       //显示部分题目
       showLess(index) {
-        this.isFolded = true;
+        console.log('less时： '+this.listData[index].folded)
+        this.listData[index].folded = true;
         this.listData[index].current_direction = this.getBriefDir(this.listData[index].cpt_direction);
       },
       getBriefDir(direction) {
-        return direction.substring(0, 212)+"...";;
+        if(direction.length > 212)
+          return direction.substring(0, 212)+"...";
+          else
+            return direction;
       },
       //通过关键字进行模糊查询
       queryKeyword(keyword) {
