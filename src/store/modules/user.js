@@ -74,10 +74,6 @@ const user = {
             Vue.ls.set(ACCESS_TOKEN, data.token, 7 * 24 * 60 * 60 * 1000)
             //将用户名称放入localStorage进去是否登录判断
             Vue.ls.set(CURRENT_USER, data.userName, 7 * 24 * 60 * 60 * 1000);
-            const interval = Vue.ls.get(GET_NAME_INTERVAL);
-            // 清空获取头像的轮询
-            if (interval)
-              clearInterval(interval)
             // state中放入token
             commit('SET_TOKEN', data.token);
             resolve(response);
@@ -127,7 +123,6 @@ const user = {
 
     // 登出
     Logout({commit, state}) {
-      const that = this;
       return new Promise((resolve, reject) => {
         logout(state.token).then(() => {
           resolve();
@@ -137,6 +132,10 @@ const user = {
           // 清楚本地ls
           commit('SET_TOKEN', '')
           commit('SET_ROLES', [])
+          const interval = Vue.ls.get(GET_NAME_INTERVAL);
+          // 清空获取头像的轮询
+          if (interval)
+            clearInterval(interval)
           Vue.ls.remove(SESSION_ID);
           Vue.ls.remove(ACCESS_TOKEN);
           Vue.ls.remove(CURRENT_USER);
