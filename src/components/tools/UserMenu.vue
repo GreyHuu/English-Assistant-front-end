@@ -47,6 +47,9 @@
       ...mapGetters(['nickname', 'avatar'])
     },
     mounted() {
+      getCurrentUser().then(e => {
+        this.avatarValue = e.data.nick_name;
+      })
       const getNameInterval = setInterval(() => {
         getCurrentUser().then(e => {
           this.avatarValue = e.data.nick_name;

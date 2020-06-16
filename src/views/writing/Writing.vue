@@ -20,7 +20,7 @@
               提交
             </a-button>
           </a-popconfirm>
-          <a-button type="primary" style="margin-left: 2em" @click="back" ghost>
+          <a-button type="primary" style="margin-left: 2em" @click="backToBank" ghost>
             返回题库
           </a-button>
         </div>
@@ -56,8 +56,8 @@
               提交修改
             </a-button>
           </a-popconfirm>
-          <a-button type="primary" style="margin-left: 2em" @click="back" ghost>
-            返回题库
+          <a-button type="primary" style="margin-left: 2em" @click="backToMy" ghost>
+            返回我的作文
           </a-button>
         </div>
       </div>
@@ -180,10 +180,16 @@
       cancel(content) {
         this.$message.error(content);
       },
-
-      back() {
+      //返回到作文题库
+      backToBank() {
         this.$router.push({
           name: "composition_bank",
+        })
+      },
+      //返回到我的作文
+      backToMy() {
+        this.$router.push({
+          name: "my_composition",
         })
       },
 
