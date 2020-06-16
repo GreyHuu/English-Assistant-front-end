@@ -53,7 +53,7 @@
                         @confirm="rewrite(composition.mycpt_id, composition.mycpt)"
                         @cancel="cancel('取消提交')">
             <a-button type="primary" style="margin-left: 2em" ghost v-if="isRewrite">
-              返回我的作文
+              提交修改
             </a-button>
           </a-popconfirm>
           <a-button type="primary" style="margin-left: 2em" @click="backToMy" ghost>
