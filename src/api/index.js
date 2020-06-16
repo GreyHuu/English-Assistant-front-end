@@ -1,4 +1,4 @@
-const URL_PREFIX = "http://localhost:8888";
+const URL_PREFIX = "http://106.15.237.74:8888";
 const api = {
   Login: URL_PREFIX + '/users/login',
   LoginByPhone: URL_PREFIX + "/users/login-by-phone",
