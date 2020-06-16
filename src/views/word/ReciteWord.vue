@@ -100,7 +100,7 @@
           // 单词例子2中文
           chineseInstance2:'工程师正在讨论这个建筑问题。'
         },
-        baseUrl : 'http://localhost:8888',
+        baseUrl : 'http://106.15.237.74:8888',
         // 单词列表
         wordList:[],
         // 单词数量

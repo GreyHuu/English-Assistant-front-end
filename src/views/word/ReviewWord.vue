@@ -106,7 +106,7 @@
         },
         // 生词
         newWordList:[],
-        baseUrl : 'http://localhost:8888',
+        baseUrl : 'http://106.15.237.74:8888',
         avatar:'',
         index:0,
         len:0

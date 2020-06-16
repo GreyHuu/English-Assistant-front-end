@@ -207,7 +207,7 @@
         sexNumber: null,
         // 考研单词每日背诵量
         kaoYanNumber: null,
-        baseUrl: 'http://localhost:8888',
+        baseUrl: 'http://106.15.237.74:8888',
         // 搜索单词
         wordsearch:'',
         // 返回搜索数据列表
