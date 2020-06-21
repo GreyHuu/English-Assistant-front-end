@@ -1,4 +1,5 @@
 const URL_PREFIX = "http://106.15.237.74:8888";
+// const URL_PREFIX = "http://localhost:8888";
 const api = {
   Login: URL_PREFIX + '/users/login',
   LoginByPhone: URL_PREFIX + "/users/login-by-phone",
@@ -31,6 +32,7 @@ const reading = {
   SearchReadingListData: URL_PREFIX + "/reading/search-list",
   DeleteReadingList: URL_PREFIX + "/reading/delete-list",
 }
+
 
 const writing = {
   getAllCompositions: URL_PREFIX + "/writing/get-all-compositions",
